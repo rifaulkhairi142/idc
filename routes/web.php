@@ -1,0 +1,152 @@
+<?php
+
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\LowonganPPLController;
+use App\Http\Controllers\Admin\MahasiswaKPMController;
+use App\Http\Controllers\Admin\MahasiswaPPLContoller;
+use App\Http\Controllers\Admin\MahsiswaController;
+use App\Http\Controllers\Admin\ProdiController;
+use App\Http\Controllers\Admin\SupervisorController as AdminSupervisorController;
+use App\Http\Controllers\Admin\TempatKPM;
+use App\Http\Controllers\Admin\TempatPPLController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeControler;
+use App\Http\Controllers\Mahasiswa\LowonganKPM;
+use App\Http\Controllers\Mahasiswa\LowonganPPL;
+use App\Http\Controllers\Mahasiswa\MahasiswaController;
+use App\Http\Controllers\Mahasiswa\NilaiController;
+use App\Http\Controllers\Mahasiswa\ProfilController as MahasiswaProfilController;
+use App\Http\Controllers\Mahasiswa\RiwayatLamaran;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Supervisor\SupervisorController;
+use App\Http\Controllers\testcontroller;
+use App\Models\LowonganPPL as ModelsLowonganPPL;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name("admin.dashboard");
+
+
+    Route::get('/admin/daftarprodi', [ProdiController::class, 'show'])->name("admin.daftarprodi");
+    Route::get('/admin/prodi/add', [ProdiController::class, 'add'])->name('admin.prodi.add');
+    Route::get('/admin/prodi/import', [ProdiController::class, 'import'])->name("admin.prodi.import");
+    Route::get('/admin/prodi/edit/{id}', [ProdiController::class, 'edit'])->name("admin.prodi.edit");
+    Route::patch('/admin/prodi/{id}', [ProdiController::class, 'update'])->name("admin.prodi.update");
+    Route::post('/admin/prodi/save', [ProdiController::class, 'save'])->name('admin.prodi.save');
+
+    Route::post('/admin/importdataprodi', [ProdiController::class, 'importprodi'])->name("admin.importdataprodi");
+    Route::delete('/admin/prodi/{id}', [ProdiController::class, 'delete'])->name("admin.prodi.delete");
+
+
+    Route::get('/admin/daftaradmin', [AdminController::class, 'index'])->name('admin.daftaradmin');
+    Route::get('/admin/add', [AdminController::class, 'add'])->name('admin.add');
+    Route::post('/admin/save', [AdminController::class, 'save'])->name('admin.save');
+    Route::delete('/admin/delete/{email}', [AdminController::class, 'delete'])->name('admin.delete');
+
+
+
+
+
+
+    Route::get('/admin/daftarsupervisor', [AdminSupervisorController::class, 'index'])->name("admin.daftarsupervisor");
+    Route::get('/admin/supervisor/import', [AdminSupervisorController::class, 'import'])->name("admin.supervisor.import");
+    Route::post('/admin/importsupervisor', [AdminSupervisorController::class, 'importsupervisor'])->name("admin.importsupervisor");
+    Route::delete('/admin/supervisor/{id}', [AdminSupervisorController::class, 'delete'])->name("admin.supervisor.delete");
+    Route::get('/admin/supervisor/{id}', [AdminSupervisorController::class, 'edit'])->name("admin.supervisor.edit");
+    Route::patch('/admin/supervisor/{id}', [AdminSupervisorController::class, 'update'])->name("admin.supervisor.update");
+    Route::get('/admin/tambah/supervisor', [AdminSupervisorController::class, 'tambah'])->name("admin.supervisor.tambah");
+    Route::post('/admin/save/supervisor', [AdminSupervisorController::class, 'save'])->name("admin.supervisor.save");
+
+
+    Route::get('/admin/daftartempatppl', [TempatPPLController::class, 'index'])->name("admin.daftartempatppl");
+    Route::get('/admin/tempatppl/import', [TempatPPLController::class, 'import'])->name("admin.tempatppl.import");
+    Route::get('/admin/tempatppl/add', [TempatPPLController::class, 'add'])->name("admin.addtempatppl");
+    Route::post('/admin/tempatppl/save', [TempatPPLController::class, 'save'])->name('admin.tempatppl.save');
+    Route::get('/admin/tempatppl/detail/{id}', [TempatPPLController::class, 'detail'])->name('admin.tempatppl.detail');
+    // Route::post('/admin/tempatppl/update/{id}', [TempatPPLController::class, 'update'])->name('admin.tempatppl.update');
+    Route::post('/admin/importtempatppl', [TempatPPLController::class, 'importtempatppl'])->name("admin.importtempatppl");
+    Route::get('/admin/tempatppl/edit/{id}', [TempatPPLController::class, 'edit'])->name('admin.tempatppl.edit');
+    Route::patch('/admin/tempatppl/update/{id}', [TempatPPLController::class, 'update'])->name('admin.tempatppl.update');
+    Route::delete('/admin/tempatppl/delete/{id}', [TempatPPLController::class, 'delete'])->name('admin.tempatppl.delete');
+
+    Route::get('/admin/lowonganppl/add', [LowonganPPLController::class, 'add'])->name('admin.lowonganppl.add');
+    Route::post('/admin/lowonganppl/save', [LowonganPPLController::class, 'save'])->name('admin.lowonganppl.save');
+    Route::get('/admin/lowonganppl/detail/{id}', [LowonganPPLController::class, 'detail'])->name('admin.lowonganppl.detail');
+    Route::delete('admin/lowonganppl/delete/{id}', [LowonganPPLController::class, 'delete'])->name("admin.lowonganppl.delete");
+    Route::get('/admin/daftarlowonganppl', [LowonganPPLController::class, 'index'])->name("admin.daftarlowonganppl");
+    Route::get('/admin/addlowonganppl', [LowonganPPLController::class, 'add'])->name("admin.addlowonganppl");
+    Route::post('/admin/lowonganppl/update/{id}', [LowonganPPLController::class, 'update'])->name('admin.lowonganppl.update');
+    Route::post('/admin/importlowonganppl', [LowonganPPLController::class, 'importlowonganppl'])->name("admin.importlowonganppl");
+    Route::get('/admin/lowonganppl/edit/{id}', [LowonganPPLController::class, 'edit'])->name('admin.lowonganppl.edit');
+    Route::get('/admin/pelamarppl/detail/{id}', [LowonganPPLController::class, 'detail_pelamar'])->name('admin.pelamarppl.detail');
+    Route::post('/admin/pelamarppl/followup/{id}', [LowonganPPLController::class, 'followup'])->name('admin.lamaranppl.followup');
+
+    Route::get('/admin/daftarmahasiswappl', [MahasiswaPPLContoller::class, 'index'])->name("admin.daftarmahasiswappl");
+    Route::get('/admin/mahasiswappl/edit/{id}', [MahasiswaPPLContoller::class, 'edit'])->name("admin.mahasiswappl.edit");
+    Route::patch('/admin/updatenilai/{id}', [MahasiswaPPLContoller::class, 'updatenilai']);
+    Route::get('admin/mahasiswa/edit/{nim}', [MahsiswaController::class, 'edit'])->name('admin.mahasiswa.edit');
+    Route::get('/admin/daftarmahasiswa', [MahsiswaController::class, 'index'])->name("admin.daftarmahasiswa");
+    Route::post('/admin/importmahasiswa', [MahsiswaController::class, 'importmahasiswa'])->name("admin.importmahasiswa");
+
+    Route::get('/admin/addmahasiswa', [MahsiswaController::class, 'add'])->name("admin.addmahasiswa");
+    Route::patch('/admin/mahasiswa/update/{nim}', [MahsiswaController::class, 'update'])->name("admin.mahasiswa.update");
+    Route::get('/admin/mahasiswa/detail/{id}', [MahsiswaController::class, 'detail'])->name('admin.mahasiswa.detail');
+    Route::post('/admin/mahasiswa/followup/{id}', [MahsiswaController::class, 'followup'])->name('admin.mahasiswa.followup');
+
+    Route::get('/admin/tempatkpm', [TempatKPM::class, 'list'])->name("admin.tempatkpm.list");
+    Route::get('/admin/tempatkpm/add', [TempatKPM::class, 'add'])->name("admin.tempatkpm.add");
+    Route::get('/admin/tempatkpm/detail/{id}', [TempatKPM::class, 'detail'])->name('admin.tempatkpm.detail');
+    Route::post('/admin/tempatkpm/save', [TempatKPM::class, 'save'])->name('admin.tempatkpm.save');
+    Route::post('/admin/tempatkpm/update/{id}', [TempatKPM::class, 'update'])->name('admin.tempatkpm.update');
+    Route::get('/admin/tempatkpm/edit/{id}', [TempatKPM::class, 'edit'])->name("admin.tempatkpm.edit");
+    Route::delete('/admin/tempatkpm/delete/{id}', [TempatKPM::class, 'delete'])->name("admin.tempatkpm.delete");
+    Route::get('/admin/pelamarkpm/detail/{id}', [TempatKPM::class, 'detail_pelamar'])->name("admin.pelamarkpm.detail");
+    Route::post('/admin/pelamarkpm/followup/{id}', [TempatKPM::class, 'followup'])->name('admin.pelamarkpm.followup');
+    Route::get('/admin/mahasiswakpm/list', [MahasiswaKPMController::class, 'all'])->name("admin.mahasiswakpm.list");
+
+    // Route::post('/admin/importdataprodi', [ProdiController::class, 'importprodi'])->name("admin.importdataprodi");
+    Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings');
+    Route::post('/admin/settings/update', [SettingController::class, 'update'])->name('admin.settings.update');
+});
+
+
+
+Route::middleware(['auth', 'supervisor'])->group(function () {
+    Route::get('/supervisor/dashboard', [SupervisorController::class, 'index'])->name("supervisor.dashboard");
+    Route::get('/supervisor/daftarmahasiswappl', [SupervisorController::class, 'daftarmahasiswappl']);
+    Route::get('/supervisor/editnilai/{id}', [SupervisorController::class, 'editnilai']);
+    Route::patch('/supervisor/updatenilai/{id}', [SupervisorController::class, 'updatenilai']);
+});
+
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::get('/', [HomeControler::class, 'index'])->name("frontpage")->middleware(['profil', 'open_kpm']);
+    Route::get('/lowongankpm/detail/{id}', [LowonganKPM::class, 'index'])->name("lowongankpm.detail")->middleware(['profil']);
+    Route::post('/lowongankpm/lamar', [LowonganKPM::class, 'lamar'])->name('lowongankpm.lamar')->middleware(['profil']);
+    Route::get('/riwayat', [RiwayatLamaran::class, 'index'])->name('riwayat')->middleware(['profil']);
+    Route::get('/lowonganppl', [LowonganPPL::class, 'all'])->name('lownganppl')->middleware(['profil', 'open_ppl']);
+    Route::get('/lowonganppl/detail/{id}', [LowonganPPL::class, 'detail'])->name('lownganppl.detail')->middleware(['profil']);
+    Route::post('/lowonganppl/lamar', [LowonganPPL::class, 'lamar'])->name('lownganppl.lamar')->middleware(['profil']);
+    Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name("profil");
+    Route::get('/nilai', [NilaiController::class, 'index'])->name("nilai")->middleware(['profil']);
+    Route::post('/profil/save', [MahasiswaProfilController::class, 'save'])->name('profil.save')->middleware(['save_profil']);
+});
+
+
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/pw', [testcontroller::class, 'index'])->name('index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__ . '/auth.php';
