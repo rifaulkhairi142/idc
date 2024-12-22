@@ -74,7 +74,7 @@ export const FollowUpLamaranPPL = ({ lamaran, base_url, lownganppl }) => {
     return (
         <section className="main flex">
             <div className="sidebarWrapper flex">
-                <Sidebar tabId={4} />
+                <Sidebar tabId={3} />
             </div>
             <div className="flex ml-72 w-full flex-col">
                 <Header></Header>
@@ -290,6 +290,7 @@ export const FollowUpLamaranPPL = ({ lamaran, base_url, lownganppl }) => {
                                         <MenuItem value={"rejected"}>
                                             Reject
                                         </MenuItem>
+
                                         <MenuItem value={"accepted"}>
                                             Accept
                                         </MenuItem>

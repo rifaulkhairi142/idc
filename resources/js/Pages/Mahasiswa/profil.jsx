@@ -310,6 +310,22 @@ const Profil = ({ lowongan_ppl, flash, mahasiswa, list_prodi, link_grup }) => {
                                     )}
                                 </li>
                             </ul>
+                            {mahasiswa?.data_mahasiswa?.status === "revisi" && (
+                                <ul className="flex w-full mt-3">
+                                    <li className="flex w-full">
+                                        <Alert
+                                            severity="warning"
+                                            sx={{ width: "100%" }}
+                                        >
+                                            {
+                                                mahasiswa?.data_mahasiswa
+                                                    ?.keterangan
+                                            }
+                                        </Alert>
+                                    </li>
+                                </ul>
+                            )}
+
                             <div className="grid max-w-6xl gap-2 grid-cols-1 md:grid-cols-2 pb-5">
                                 <div className="flex w-full flex-col mt-5 gap-y-2">
                                     <div className="flex flex-col">
@@ -744,7 +760,7 @@ const getProfilStatus = (status) => {
         return (
             <Chip
                 variant="filled"
-                label="Profilmu Ditolak silakan lengkapi profil kembali"
+                label="Pendaftaranmu Ditolak, Silakan mendaftar di gelombang selanjutnya"
                 color="error"
             />
         );
@@ -754,6 +770,14 @@ const getProfilStatus = (status) => {
                 variant="filled"
                 label="Pendaftaranmu Diterima"
                 color="success"
+            />
+        );
+    } else if (status === "revisi") {
+        return (
+            <Chip
+                variant="filled"
+                label="Profilmu Ditolak silakan lengkapi profil kembali"
+                color="warning"
             />
         );
     }

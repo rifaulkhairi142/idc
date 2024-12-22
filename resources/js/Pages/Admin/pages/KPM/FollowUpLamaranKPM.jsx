@@ -74,7 +74,7 @@ export const FollowUpLamaranKPM = ({ lamaran, base_url, tempatkpm }) => {
     return (
         <section className="main flex">
             <div className="sidebarWrapper flex">
-                <Sidebar tabId={4} />
+                <Sidebar tabId={2} />
             </div>
             <div className="flex ml-72 w-full flex-col">
                 <Header></Header>
@@ -82,7 +82,9 @@ export const FollowUpLamaranKPM = ({ lamaran, base_url, tempatkpm }) => {
                 <div className="space"></div>
                 <div className="flex flex-col w-full px-3 gap-y-3">
                     <Breadcrumbs separator={<NavigateNext fontSize="small" />}>
-                        <Link href="/admin/daftarmahasiswa">Mahasiswa</Link>
+                        <Link href="/admin/tempatkpm/pelamar/list">
+                            Mahasiswa
+                        </Link>
                         <Link>Detail</Link>
                     </Breadcrumbs>
                     <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-3 p-4 bg-white rounded-md shadow-md">
@@ -170,6 +172,22 @@ export const FollowUpLamaranKPM = ({ lamaran, base_url, tempatkpm }) => {
                                             {tempatkpm?.accepted_pelamar_count}
                                         </td>
                                     </tr>
+                                    <tr className="gap-3">
+                                        <td className="text-gray-600 text-end align-top pr-2">
+                                            Jumlah Laki-Laki
+                                        </td>
+                                        <td className="text-gray-950 font-semibold align-top">
+                                            {tempatkpm?.jumlah_pria}
+                                        </td>
+                                    </tr>
+                                    <tr className="gap-3">
+                                        <td className="text-gray-600 text-end align-top pr-2">
+                                            Jumlah Perempuan
+                                        </td>
+                                        <td className="text-gray-950 font-semibold align-top">
+                                            {tempatkpm?.jumlah_wanita}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -192,12 +210,12 @@ export const FollowUpLamaranKPM = ({ lamaran, base_url, tempatkpm }) => {
                                             {lamaran?.data_user?.prodi?.name}
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr className="bg-yellow-300">
                                         <td className="text-gray-600 align-top text-end pr-2">
-                                            NIM
+                                            Jenis Kelamin
                                         </td>
                                         <td className="text-gray-950 font-semibold text-wrap">
-                                            {lamaran?.pelamar?.username}
+                                            {lamaran?.data_user?.jk}
                                         </td>
                                     </tr>
                                     <tr>

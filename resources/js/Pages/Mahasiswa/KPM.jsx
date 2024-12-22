@@ -6,6 +6,7 @@ import {
     Button,
     TextField,
     CircularProgress,
+    LinearProgress,
 } from "@mui/material";
 import PropTypes from "prop-types";
 
@@ -67,6 +68,7 @@ const Profil = ({ flash, tempat_kpm }) => {
         sub_district: "",
         village: "",
     });
+
     useEffect(() => {
         if (flash.message !== null) {
             console.log("notify=> ", notify);
@@ -102,13 +104,8 @@ const Profil = ({ flash, tempat_kpm }) => {
     useEffect(() => {
         fetchData();
         console.log(filters);
-    }, [page, filters]);
+    }, [page]);
 
-    useEffect(() => {
-        if (inView && rawData.current_page < rawData.last_page) {
-            setPage((prev) => prev + 1);
-        }
-    }, [inView]);
     const handleCloseNotify = (event, reason) => {
         if (reason === "clickaway") {
             return;
@@ -125,6 +122,7 @@ const Profil = ({ flash, tempat_kpm }) => {
 
     const handleRegencyChange = (e, value) => {
         setListOfSubdistricts(kecamatan(value.kode));
+        console.log(value.kode);
 
         setRegency(value);
     };
@@ -136,13 +134,14 @@ const Profil = ({ flash, tempat_kpm }) => {
 
     const handleVillageChange = (e, value) => {
         setVillage(value);
-        setVillage(value);
     };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        post("/profil/save");
-    };
+    useEffect(() => {
+        setFilters({
+            regency: regency?.kode,
+            sub_district: subDistrict?.kode,
+            village: village,
+        });
+    }, [regency, subDistrict, village]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -178,46 +177,6 @@ const Profil = ({ flash, tempat_kpm }) => {
                                 Pilihan Tempat KPM
                             </p>
                             <div className="flex flex-col w-full gap-y-3">
-                                {/* <form class="max-w-md ">
-                                    <label
-                                        for="default-search"
-                                        class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-                                    >
-                                        Search
-                                    </label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                            <svg
-                                                class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 20 20"
-                                            >
-                                                <path
-                                                    stroke="currentColor"
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    stroke-width="2"
-                                                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                                                />
-                                            </svg>
-                                        </div>
-                                        <input
-                                            type="search"
-                                            id="default-search"
-                                            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                            placeholder="Cari Tempat KPM"
-                                            required
-                                        />
-                                        <button
-                                            type="submit"
-                                            class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                        >
-                                            Search
-                                        </button>
-                                    </div>
-                                </form> */}
                                 <div className="flex flex-col">
                                     <p>Filter berdasarkan wilayah</p>
                                     <div className="flex w-full mt-2 flex-col gap-3 items-end">
@@ -301,12 +260,14 @@ const Profil = ({ flash, tempat_kpm }) => {
                                                 disableElevation
                                                 onClick={(e) => {
                                                     setDataLowongan([]);
-                                                    setFilters({
-                                                        regency: regency?.kode,
-                                                        sub_district:
-                                                            subDistrict?.kode,
-                                                        village: village?.kode,
-                                                    });
+                                                    setPage(1);
+                                                    // setFilters({
+                                                    //     regency: regency?.kode,
+                                                    //     sub_district:
+                                                    //         subDistrict?.kode,
+                                                    //     village: village?.kode,
+                                                    // });
+                                                    fetchData();
                                                 }}
                                                 sx={{
                                                     textTransform: "capitalize",
@@ -359,11 +320,17 @@ const Profil = ({ flash, tempat_kpm }) => {
                                                         {kpm?.name}
                                                     </p>
                                                     <p>{locationDetails}</p>
-                                                    <div>
+                                                    <div className="flex flex-row gap-x-2 w-full">
                                                         <p className="flex px-2 py-1 w-fit  rounded-md bg-tertiary/30 text-tertiary ">
                                                             Kuota{" "}
                                                             <span className="font-bold  ml-2">
                                                                 {kpm?.qouta}
+                                                            </span>
+                                                        </p>
+                                                        <p className="flex px-2 py-1 w-fit  rounded-md bg-yellow-600/30 text-yellow-800 ">
+                                                            Terisi{" "}
+                                                            <span className="font-bold  ml-2">
+                                                                {kpm?.terisi}
                                                             </span>
                                                         </p>
                                                     </div>
@@ -394,13 +361,46 @@ const Profil = ({ flash, tempat_kpm }) => {
                                         </div>
                                     );
                                 })}
-                                <div className="flex w-full justify-center">
-                                    {loading && <CircularProgress />}
+                                <div className="flex w-full justify-center h-10">
+                                    {loading && (
+                                        <Box
+                                            sx={{
+                                                width: "100%",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                display: "flex",
+                                            }}
+                                        >
+                                            <LinearProgress
+                                                style={{
+                                                    position: "relative",
+                                                    width: "100%",
+                                                }}
+                                            />
+                                        </Box>
+                                    )}
                                 </div>
-                                <div
-                                    className="flex w-full justify-center"
-                                    ref={ref}
-                                ></div>
+                                <div className="flex w-full justify-center">
+                                    <Button
+                                        variant="contained"
+                                        disableElevation
+                                        disabled={loading}
+                                        sx={{
+                                            textTransform: "capitalize",
+                                            color: "white",
+                                        }}
+                                        onClick={() => {
+                                            if (
+                                                rawData.current_page <
+                                                rawData.last_page
+                                            ) {
+                                                setPage((prev) => prev + 1);
+                                            }
+                                        }}
+                                    >
+                                        Muat Lebih Banyak
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </section>

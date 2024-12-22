@@ -166,12 +166,39 @@ const DetailLowonganKPM = ({ flash, tempat_kpm, pelamar }) => {
                                             </tr>
                                             <tr className="gap-3">
                                                 <td className="text-gray-600 text-end align-top pr-2">
+                                                    Jumlah Pelamar
+                                                </td>
+                                                <td className="text-gray-950 font-semibold align-top">
+                                                    {
+                                                        tempat_kpm?.accepted_pelamar_count
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr className="gap-3">
+                                                <td className="text-gray-600 text-end align-top pr-2">
                                                     Terisi
                                                 </td>
                                                 <td className="text-gray-950 font-semibold align-top">
                                                     {
                                                         tempat_kpm?.accepted_pelamar_count
                                                     }
+                                                </td>
+                                            </tr>
+                                            <tr className="gap-3">
+                                                <td className="text-gray-600 text-end align-top pr-2">
+                                                    Jumlah Laki-Laki
+                                                </td>
+                                                <td className="text-gray-950 font-semibold align-top">
+                                                    {tempat_kpm?.jumlah_pria}
+                                                </td>
+                                            </tr>
+                                            <tr className="gap-3">
+                                                <td className="text-gray-600 text-end align-top pr-2">
+                                                    Jumlah Perempuan
+                                                </td>
+                                                <td className="text-gray-950 font-semibold align-top">
+                                                    {tempat_kpm?.jumlah_wanita}
                                                 </td>
                                             </tr>
                                             <tr className="gap-3">

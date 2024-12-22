@@ -29,8 +29,43 @@ const TempatKPM = ({ tempat_kpm }) => {
         },
         { name: "name" },
 
-        { name: "qouta", label: "Kuota" },
-        { name: "accepted_pelamar_count", label: "Terisi" },
+        {
+            name: "qouta",
+            label: "Kuota",
+            options: {
+                customBodyRender: (value) => (
+                    <p className="text-center">{value}</p>
+                ),
+            },
+        },
+        {
+            name: "accepted_pelamar_count",
+            label: "Terisi",
+            options: {
+                customBodyRender: (value) => (
+                    <p className="text-center">{value}</p>
+                ),
+            },
+        },
+        {
+            name: "jumlah_pria",
+            label: "Laki-Laki",
+            options: {
+                customBodyRender: (value) => (
+                    <p className="text-center">{value}</p>
+                ),
+            },
+        },
+        {
+            name: "jumlah_wanita",
+            label: "Jumlah Perempuan",
+            options: {
+                customBodyRender: (value) => (
+                    <p className="text-center">{value}</p>
+                ),
+            },
+        },
+
         { name: "username_supervisor", label: "Nama Supervisor" },
         {
             name: "id",

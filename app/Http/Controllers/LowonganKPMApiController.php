@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TempatKPM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LowonganKPMApiController extends Controller
 {
@@ -21,7 +22,11 @@ class LowonganKPMApiController extends Controller
             $query->where('village', $request->village);
         }
 
-        $data = $query->paginate(10);
+        $data = $query->select(
+            'tempat_kpm_tbl.*',
+            DB::raw("(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = 'accepted' AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id) AS terisi")
+
+        )->paginate(20);
 
         return response()->json($data);
     }

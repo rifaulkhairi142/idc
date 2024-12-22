@@ -32,7 +32,7 @@ const Header = () => {
         <header className="flex z-[100] w-full sticky top-0 shadow-md ">
             <div className="flex-grow"></div>
 
-            <div className="flex w-full px-5 h-16 lg:px-20 md:px-10 bg-[#1C2434] items-center">
+            <div className="flex w-full px-5 h-fit py-2 lg:px-20 md:px-10 bg-[#1C2434] items-center">
                 {/* Left Section */}
                 <div className="flex items-center w-1/3">
                     <span className="ml-3 text-2xl font-semibold text-white">

@@ -69,7 +69,7 @@ class ProfilController extends Controller
         ]);
         DB::beginTransaction();
         try {
-            if ($data_mahasiswa->status === 'rejected' || $data_mahasiswa->status === null) {
+            if ($data_mahasiswa->status === 'revisi' || $data_mahasiswa->status === null) {
 
                 if ($request->hasFile('transkrip')) {
 
@@ -95,6 +95,10 @@ class ProfilController extends Controller
                 DB::rollBack();
 
                 return redirect()->back()->with('message', ['error' => 'Data kamu sedang di-review']);
+            } elseif ($data_mahasiswa->status === 'rejected') {
+                DB::rollBack();
+
+                return redirect()->back()->with('message', ['error' => 'Biodatamu ditolak, silakan daftar di gelombang selanjutnya']);
             }
         } catch (Exception $e) {
             DB::rollBack();

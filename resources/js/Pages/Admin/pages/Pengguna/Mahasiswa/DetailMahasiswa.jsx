@@ -271,6 +271,9 @@ export const DetailMahasiswa = ({ mahasiswa, base_url }) => {
                                         <MenuItem value={"rejected"}>
                                             Reject
                                         </MenuItem>
+                                        <MenuItem value={"revisi"}>
+                                            Revisi
+                                        </MenuItem>
                                         <MenuItem value={"accepted"}>
                                             Accept
                                         </MenuItem>

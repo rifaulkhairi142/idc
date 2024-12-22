@@ -269,13 +269,13 @@ const RiwayatLamaran = ({ flash, lamaran_kpm, lamaran_ppl }) => {
                                                                             size="small"
                                                                             disableElevation
                                                                             variant="contained"
-                                                                            onClick={(
+                                                                            onClick={( 
                                                                                 e
                                                                             ) => {
                                                                                 e.preventDefault();
 
                                                                                 router.visit(
-                                                                                    `/lowongankpm/detail/${kpm.id}`
+                                                                                    `/lowongankpm/detail/${kpm.id_tempat_kpm}`
                                                                                 );
                                                                             }}
                                                                             sx={{
@@ -432,7 +432,7 @@ const RiwayatLamaran = ({ flash, lamaran_kpm, lamaran_ppl }) => {
                                                                                 e.preventDefault();
 
                                                                                 router.visit(
-                                                                                    `/lowonganppl/detail/${ppl.id}`
+                                                                                    `/lowonganppl/detail/${ppl.id_lowongan_ppl}`
                                                                                 );
                                                                             }}
                                                                             sx={{

@@ -96,34 +96,35 @@ export const DetailTempatPPL = ({ sekolah, pelamar, lowongan }) => {
             },
         },
         {
-            name: "user",
+            name: "nama_mahasiswa",
             label: "Nama",
             options: {
-                customBodyRender: (value) => <p>{value.name}</p>,
+                customBodyRender: (value) => <p>{value}</p>,
             },
         },
         {
-            name: "user",
+            name: "nim",
             label: "NIM",
             options: {
-                customBodyRender: (value) => <p>{value.username}</p>,
+                customBodyRender: (value) => <p>{value}</p>,
             },
         },
 
         {
-            name: "data_user",
+            name: "nama_prodi",
             label: "Prodi",
             options: {
-                customBodyRender: (value) => <p>{value.prodi.name}</p>,
+                customBodyRender: (value) => <p>{value}</p>,
             },
         },
         {
-            name: "data_user",
+            name: "jk",
             label: "Jenis Kelamin",
             options: {
-                customBodyRender: (value) => <p>{value.jk}</p>,
+                customBodyRender: (value) => <p>{value}</p>,
             },
         },
+        { name: "no_hp_wa", label: "No HP" },
         { name: "status", label: "Status" },
         {
             name: "id",
@@ -132,7 +133,7 @@ export const DetailTempatPPL = ({ sekolah, pelamar, lowongan }) => {
                 customBodyRender: (value) => (
                     <ul className="flex flex-row justify-center items-center text-lg">
                         <li
-                            className="bg-green-500 text-white p-1 rounded-l-md cursor-pointer hover:scale-[1.1]"
+                            className="bg-green-500 text-white p-1 rounded-md cursor-pointer hover:scale-[1.1]"
                             onClick={(e) => handleOnViewPelamarClick(e, value)}
                         >
                             <MdOpenInNew />
@@ -269,6 +270,22 @@ export const DetailTempatPPL = ({ sekolah, pelamar, lowongan }) => {
                                         </td>
                                         <td className="text-gray-950 font-semibold text-wrap"></td>
                                     </tr>
+                                    <tr>
+                                        <td className="text-gray-600 align-top text-end pr-2">
+                                            Jumlah Alokasi Mahasiswa
+                                        </td>
+                                        <td className="text-gray-950 font-semibold text-wrap">
+                                            {sekolah.jumlah_alokasi}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="text-gray-600 align-top text-end pr-2">
+                                            Jumlah Terisi
+                                        </td>
+                                        <td className="text-gray-950 font-semibold text-wrap">
+                                            {sekolah.jumlah_terisi}
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -279,12 +296,12 @@ export const DetailTempatPPL = ({ sekolah, pelamar, lowongan }) => {
                         columns={columns_lowongan}
                         options={options}
                     />
-                    {/* <MUIDataTable
+                    <MUIDataTable
                         title={"Pelamar"}
                         data={pelamar}
                         columns={columns_pelamar}
                         options={options}
-                    /> */}
+                    />
                 </div>
             </div>
         </section>

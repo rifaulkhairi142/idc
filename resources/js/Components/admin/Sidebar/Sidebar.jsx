@@ -88,6 +88,14 @@ const Sidebar = ({ tabId }) => {
                                     >
                                         Settings
                                     </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={(e) =>
+                                            router.get("/admin/mahasiswappkpm")
+                                        }
+                                    >
+                                        Mahasiswa PPKPM
+                                    </Button>
                                 </div>
                             </div>
                         </li>
@@ -129,8 +137,18 @@ const Sidebar = ({ tabId }) => {
                                     >
                                         Tempat KPM
                                     </Button>
-
                                     <Button
+                                        className="w-full"
+                                        onClick={(e) => {
+                                            router.visit(
+                                                "/admin/tempatkpm/pelamar/list"
+                                            );
+                                        }}
+                                    >
+                                        List Pelamar
+                                    </Button>
+
+                                    {/* <Button
                                         className="w-full"
                                         onClick={(e) =>
                                             router.get(
@@ -139,7 +157,7 @@ const Sidebar = ({ tabId }) => {
                                         }
                                     >
                                         Data Mahasiswa KPM
-                                    </Button>
+                                    </Button> */}
                                 </div>
                             </div>
                         </li>
@@ -194,6 +212,16 @@ const Sidebar = ({ tabId }) => {
                                         }}
                                     >
                                         Lowongan PPL
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={(e) => {
+                                            router.visit(
+                                                "/admin/lowongan/ppl/pelamar/list"
+                                            );
+                                        }}
+                                    >
+                                        List Pelamar
                                     </Button>
 
                                     <Button

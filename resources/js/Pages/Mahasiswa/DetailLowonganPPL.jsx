@@ -247,7 +247,7 @@ const DetailLowonganPPL = ({ flash, tempat_ppl, pelamar }) => {
                                         <tbody>
                                             <tr className="gap-3">
                                                 <td className="text-gray-600 text-end align-top pr-2">
-                                                    Nama Tempat KPM
+                                                    Nama Tempat PPL
                                                 </td>
                                                 <td className="text-gray-950 font-semibold align-top">
                                                     {tempat_ppl?.name}

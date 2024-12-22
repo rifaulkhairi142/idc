@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { kabupaten, kecamatan, desa } from "daftar-wilayah-indonesia";
 import { useState } from "react";
-import { Link, router } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import { NavigateNext } from "@mui/icons-material";
 import MUIDataTable from "mui-datatables";
 import { MdDelete } from "react-icons/md";
@@ -61,7 +61,7 @@ export const DetailTempatKPM = ({ tempat_kpm, pelamar }) => {
         },
         {
             name: "pelamar",
-            label: "Nama",
+            label: "NIM",
             options: {
                 customBodyRender: (value) => <p>{value.username}</p>,
             },
@@ -75,7 +75,7 @@ export const DetailTempatKPM = ({ tempat_kpm, pelamar }) => {
         },
         {
             name: "data_user",
-            label: "Prodi",
+            label: "Jenis Kelamin",
             options: {
                 customBodyRender: (value) => <p>{value.jk}</p>,
             },
@@ -89,7 +89,7 @@ export const DetailTempatKPM = ({ tempat_kpm, pelamar }) => {
                 customBodyRender: (value) => (
                     <ul className="flex flex-row justify-center items-center text-lg">
                         <li
-                            className="bg-green-500 text-white p-1 rounded-l-md cursor-pointer hover:scale-[1.1]"
+                            className="bg-green-500 text-white p-1 rounded-md cursor-pointer hover:scale-[1.1]"
                             onClick={(e) => handleOnViewClick(e, value)}
                         >
                             <MdOpenInNew />
@@ -125,6 +125,7 @@ export const DetailTempatKPM = ({ tempat_kpm, pelamar }) => {
         <section className="main flex">
             <div className="sidebarWrapper flex">
                 <Sidebar tabId={2} />
+                <Head title="Detail Tempat KPM" />
             </div>
             <div className="flex ml-72 w-full flex-col">
                 <Header></Header>

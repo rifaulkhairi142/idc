@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\LowonganPPLController;
 use App\Http\Controllers\Admin\MahasiswaKPMController;
+use App\Http\Controllers\Admin\MahasiswaPPKPMController;
 use App\Http\Controllers\Admin\MahasiswaPPLContoller;
 use App\Http\Controllers\Admin\MahsiswaController;
 use App\Http\Controllers\Admin\ProdiController;
@@ -48,10 +49,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/save', [AdminController::class, 'save'])->name('admin.save');
     Route::delete('/admin/delete/{email}', [AdminController::class, 'delete'])->name('admin.delete');
 
-
-
-
-
+    Route::get('/admin/mahasiswappkpm', [MahasiswaPPKPMController::class, 'all'])->name('admin.mahasiswappkpm.list');
 
     Route::get('/admin/daftarsupervisor', [AdminSupervisorController::class, 'index'])->name("admin.daftarsupervisor");
     Route::get('/admin/supervisor/import', [AdminSupervisorController::class, 'import'])->name("admin.supervisor.import");
@@ -85,7 +83,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/lowonganppl/edit/{id}', [LowonganPPLController::class, 'edit'])->name('admin.lowonganppl.edit');
     Route::get('/admin/pelamarppl/detail/{id}', [LowonganPPLController::class, 'detail_pelamar'])->name('admin.pelamarppl.detail');
     Route::post('/admin/pelamarppl/followup/{id}', [LowonganPPLController::class, 'followup'])->name('admin.lamaranppl.followup');
-
+    Route::get('/admin/lowongan/ppl/pelamar/list', [LowonganPPLController::class, 'list_pelamar'])->name('admin.lowongan.pelamar.list');
     Route::get('/admin/daftarmahasiswappl', [MahasiswaPPLContoller::class, 'index'])->name("admin.daftarmahasiswappl");
     Route::get('/admin/mahasiswappl/edit/{id}', [MahasiswaPPLContoller::class, 'edit'])->name("admin.mahasiswappl.edit");
     Route::patch('/admin/updatenilai/{id}', [MahasiswaPPLContoller::class, 'updatenilai']);
@@ -108,6 +106,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/pelamarkpm/detail/{id}', [TempatKPM::class, 'detail_pelamar'])->name("admin.pelamarkpm.detail");
     Route::post('/admin/pelamarkpm/followup/{id}', [TempatKPM::class, 'followup'])->name('admin.pelamarkpm.followup');
     Route::get('/admin/mahasiswakpm/list', [MahasiswaKPMController::class, 'all'])->name("admin.mahasiswakpm.list");
+    Route::get('/admin/tempatkpm/pelamar/list', [TempatKPM::class, 'list_pelamar'])->name('admin.tempatkpm.pelamar.list');
+
 
     // Route::post('/admin/importdataprodi', [ProdiController::class, 'importprodi'])->name("admin.importdataprodi");
     Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings');

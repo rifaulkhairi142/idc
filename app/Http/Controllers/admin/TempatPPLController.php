@@ -10,8 +10,11 @@ use App\Models\Sekolah;
 use App\Models\TempatPPL;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+
+use function Laravel\Prompts\select;
 
 class TempatPPLController extends Controller
 {
@@ -70,10 +73,30 @@ class TempatPPLController extends Controller
 
     public function detail($id)
     {
-        $sekolah = Sekolah::where('id', $id)->with(['supervisor'])->first();
-        $pelamar = LamaranPPL::where('id_lowongan_ppl', $id)->with(['user', 'data_user', 'data_user.prodi'])->get();
-        $daftarlowonganppl = LowonganPPL::with('sekolah')->withCount('accepted_pelamar')->get();
+        $sekolah = Sekolah::where('id', $id)
+            ->with(['supervisor'])
+            ->select(
+                'sekolah_tbl.*',
+                DB::raw("(SELECT SUM(quota) FROM lowongan_ppl_tbl WHERE id_sekolah = sekolah_tbl.id) AS jumlah_alokasi"),
+                DB::raw("(SELECT COUNT(*) 
+                      FROM lamaran_ppl_tbl l_ppl 
+                      JOIN lowongan_ppl_tbl AS lw_ppl 
+                      ON l_ppl.id_lowongan_ppl = lw_ppl.id 
+                      WHERE lw_ppl.id_sekolah = $id AND l_ppl.status = 'accepted') AS jumlah_terisi")
+            )
+            ->first();
+        // $pelamar = LamaranPPL::where('id_lowongan_ppl', $id)->with(['user', 'data_user', 'data_user.prodi'])->get();
 
+        $pelamar = LamaranPPL::join('users as us', 'lamaran_ppl_tbl.username_mahasiswa', '=', 'us.username')
+            ->join('mahasiswa_tbl as dt', 'us.username', '=', 'dt.nim')
+            ->join('prodi_tbl as pr', 'dt.id_prodi', '=', 'pr.id')
+            ->join('lowongan_ppl_tbl as lw_ppl', 'lamaran_ppl_tbl.id_lowongan_ppl', '=', 'lw_ppl.id') // Corrected here
+            ->where('lw_ppl.id_sekolah', $id)
+            ->select('lamaran_ppl_tbl.id', 'us.name as nama_mahasiswa', 'us.username as nim', 'pr.name as nama_prodi', 'dt.jk as jk', 'lamaran_ppl_tbl.status', 'dt.no_hp_wa')
+            ->get();
+
+        $daftarlowonganppl = LowonganPPL::with('sekolah')->where('id_sekolah', $id)->withCount('accepted_pelamar')->get();
+        // dd('test');
 
         return Inertia::render('Admin/pages/PPL/tempatppl/DetailTempatPPL', [
             'sekolah' => $sekolah,

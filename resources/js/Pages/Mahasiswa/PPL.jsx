@@ -53,7 +53,7 @@ const theme = createTheme({
 });
 
 const PPL = ({ flash, tempat_ppl, auth }) => {
-    const { ref, inView, entry } = useInView({});
+    // const { ref, inView, entry } = useInView({});
     const [notify, setNotify] = useState(!!flash.message);
     const [notifyStatus, setNotifyStatus] = useState("default");
     const [data, setData] = useState([]);
@@ -80,13 +80,13 @@ const PPL = ({ flash, tempat_ppl, auth }) => {
         setNotify(true);
     }, [flash.message]);
 
-    const fetchData = async () => {
+    const fetchData = async (filters_a = filters) => {
         setLoading(true);
         setError(null);
 
         axios
             .get(`/api/lowonganppl`, {
-                params: { page, ...filters },
+                params: { page, ...filters_a },
             })
             .then((response) => {
                 const { data } = response;
@@ -103,23 +103,18 @@ const PPL = ({ flash, tempat_ppl, auth }) => {
 
     useEffect(() => {
         fetchData();
-    }, [page, filters]);
+    }, [page]);
 
-    useEffect(() => {
-        if (inView && rawData.current_page < rawData.last_page) {
-            setPage((prev) => prev + 1);
-        }
-    }, [inView]);
+    // useEffect(() => {
+    //     if (inView && rawData.current_page < rawData.last_page) {
+    //         setPage((prev) => prev + 1);
+    //     }
+    // }, [inView]);
     const handleCloseNotify = (event, reason) => {
         if (reason === "clickaway") {
             return;
         }
         setNotify(false);
-    };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-        post("/profil/save");
     };
 
     return (
@@ -192,10 +187,11 @@ const PPL = ({ flash, tempat_ppl, auth }) => {
                                             class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                             onClick={() => {
                                                 setDataLowongan([]);
-                                                setFilters({
+                                                const fl = {
                                                     ...filters,
                                                     search: searchKey,
-                                                });
+                                                };
+                                                fetchData(fl);
                                             }}
                                         >
                                             Search
@@ -293,10 +289,27 @@ const PPL = ({ flash, tempat_ppl, auth }) => {
                                     {loading && <CircularProgress />}
                                 </div>
                             </div>
-                            <div
-                                className="flex w-full justify-center"
-                                ref={ref}
-                            ></div>
+                            <div className="flex w-full justify-center">
+                                <Button
+                                    variant="contained"
+                                    disableElevation
+                                    disabled={loading}
+                                    sx={{
+                                        textTransform: "capitalize",
+                                        color: "white",
+                                    }}
+                                    onClick={() => {
+                                        if (
+                                            rawData.current_page <
+                                            rawData.last_page
+                                        ) {
+                                            setPage((prev) => prev + 1);
+                                        }
+                                    }}
+                                >
+                                    Muat Lebih Banyak
+                                </Button>
+                            </div>
                         </div>
                     </section>
 

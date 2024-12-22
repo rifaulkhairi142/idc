@@ -46,11 +46,6 @@ export default function Login({ status, canResetPassword }) {
         <div className="grid grid-cols-1 md:grid-cols-2 items-center w-full h-screen bg-white/90">
             <Head title="Log in" />
 
-            {status && (
-                <div className="mb-4 font-medium text-sm text-green-600">
-                    {status}
-                </div>
-            )}
             <div className="flex w-full justify-center items-center flex-col">
                 <div className="flex w-full max-w-96 mb-3 items-start justify-start">
                     <img
@@ -58,6 +53,11 @@ export default function Login({ status, canResetPassword }) {
                         src="https://upload.wikimedia.org/wikipedia/commons/a/af/Lambang_UIN_Ar-Raniry.png"
                     />
                 </div>
+                {status && (
+                    <div className="mb-4 font-medium text-sm text-green-600">
+                        {status}
+                    </div>
+                )}
 
                 <form
                     onSubmit={submit}
@@ -68,7 +68,7 @@ export default function Login({ status, canResetPassword }) {
                         <TextField
                             id="username"
                             type="text"
-                            label="Username"
+                            label="username"
                             value={data.username}
                             sx={{
                                 width: "100%",
@@ -141,7 +141,7 @@ export default function Login({ status, canResetPassword }) {
                         />
                     </div>
 
-                    <div className="block mt-4">
+                    <div className="flex flex-row justify-between w-full mt-4">
                         <label className="flex items-center">
                             <Checkbox
                                 name="remember"
@@ -154,17 +154,17 @@ export default function Login({ status, canResetPassword }) {
                                 Remember me
                             </span>
                         </label>
+                        {canResetPassword && (
+                            <Link
+                                href={route("password.request")}
+                                className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md"
+                            >
+                                Forgot your password?
+                            </Link>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-end mt-4">
-                        {/* {canResetPassword && (
-                        <Link
-                            href={route("password.request")}
-                            className="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            Forgot your password?
-                        </Link>
-                    )} */}
                         <Link
                             href="/register"
                             className=" text-sm text-yellow-600 hover:text-yellow-600/50 rounded-md "

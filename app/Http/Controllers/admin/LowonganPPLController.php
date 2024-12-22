@@ -24,6 +24,17 @@ class LowonganPPLController extends Controller
         return Inertia::render('Admin/pages/PPL/lowonganppl/ListLowonganPPL', ['daftarlowonganppl' => $daftarlowonganppl]);
     }
 
+    public function list_pelamar()
+    {
+        $pelamar = LamaranPPL::with(['ppl', 'ppl.sekolah', 'user', 'data_user', 'data_user.prodi'])->where('status', 'submitted')->get();
+        foreach ($pelamar as $itm) {
+            $itm['terisi'] = LowonganPPL::where('id', $itm->id_lowongan_ppl)->select('id')->withCount('accepted_pelamar')->first();
+        }
+        return Inertia::render('Admin/pages/PPL/lowonganppl/ListPelamarLowonganPPL', [
+            'pelamar' => $pelamar
+        ]);
+    }
+
     public function followup(Request $request, $id)
     {
         $lamaran = LamaranPPL::find($id);

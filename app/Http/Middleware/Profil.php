@@ -23,8 +23,10 @@ class Profil
             return redirect('/profil')->with('message', ['error' => 'Lengkapi Biodata Terlebih Dahulu']);
         } else if ($data_user->status === 'submitted') {
             return redirect('/profil')->with('message', ['error' => 'Profilmu sedang di-review, silakan ditunggu']);
-        } else if ($data_user->status === 'rejected') {
+        } else if ($data_user->status === 'revisi') {
             return redirect('/profil')->with('message', ['error' => 'Bidatamu ditolak, silakan diperbaiki']);
+        } else if ($data_user->status === 'rejected') {
+            return redirect('/profil')->with('message', ['error' => 'Bidatamu ditolak, silakan daftar di gelombang selanjutnya']);
         } else {
             return $next($request);
         }
