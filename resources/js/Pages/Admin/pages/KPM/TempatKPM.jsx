@@ -11,9 +11,18 @@ import MUIDataTable from "mui-datatables";
 import { Head, router } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import { useState } from "react";
+import { kecamatan } from "daftar-wilayah-indonesia";
 
 const TempatKPM = ({ tempat_kpm }) => {
     // console.log(tempat_ppl);
+
+    const preprocessData = tempat_kpm.map((item) => {
+        const kec = kecamatan(item.location.regency).find(
+            (itm) => itm.kode === item.location.sub_district
+        )?.nama;
+
+        return { ...item, location_name: kec };
+    });
 
     const columns = [
         {
@@ -28,6 +37,12 @@ const TempatKPM = ({ tempat_kpm }) => {
             },
         },
         { name: "name" },
+        // { name: "regency" },
+        // { name: "regency" },
+        {
+            name: "location_name",
+            label: "Kecamatan",
+        },
 
         {
             name: "qouta",
@@ -154,7 +169,7 @@ const TempatKPM = ({ tempat_kpm }) => {
                     </div>
                     <MUIDataTable
                         title={"Tempat KPM"}
-                        data={tempat_kpm}
+                        data={preprocessData}
                         columns={columns}
                         options={options}
                     />

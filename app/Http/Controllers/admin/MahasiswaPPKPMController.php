@@ -36,7 +36,7 @@ class MahasiswaPPKPMController extends Controller
             )
             ->leftJoinSub(
                 DB::table('lamaran_kpm_tbl as l_kpm')
-                    ->select('l_kpm.username_mahasiswa', 'l_kpm.id_tempat_kpm', 'l_kpm.status')
+                    ->select('l_kpm.username_mahasiswa', 'l_kpm.id_tempat_kpm', 'l_kpm.status',)
                     ->where('l_kpm.status', '=', 'accepted')
                     ->unionAll(
                         DB::table('lamaran_kpm_tbl as l_kpm_alt')
@@ -53,7 +53,6 @@ class MahasiswaPPKPMController extends Controller
                 '=',
                 'lamaran_kpm.username_mahasiswa'
             )
-
             ->leftJoin('lowongan_ppl_tbl as lw_ppl', 'lamaran.id_lowongan_ppl', '=', 'lw_ppl.id')
             ->leftJoin('sekolah_tbl as s_d', 'lw_ppl.id_sekolah', '=', 's_d.id')
             ->leftJoin('tempat_kpm_tbl as t_kpm', 'lamaran_kpm.id_tempat_kpm', '=', 't_kpm.id')
@@ -62,12 +61,24 @@ class MahasiswaPPKPMController extends Controller
             ->select(
                 'users.name',
                 'users.username as nim',
+                'm_d.jk',
+                'm_d.no_hp_wa',
                 'p_d.name as nama_prodi',
+
                 'm_d.cluster_kegiatan',
                 DB::raw("CASE WHEN lamaran.status <> 'accepted' THEN NULL ELSE s_d.name END as nama_sekolah"),
-                DB::raw("CASE WHEN lamaran_kpm.status <> 'accepted' THEN NULL ELSE t_kpm.name END as nama_tempat_kpm")
+                DB::raw("CASE WHEN lamaran_kpm.status <> 'accepted' THEN NULL ELSE t_kpm.name END as nama_tempat_kpm"),
+                DB::raw("CASE WHEN lamaran_kpm.status <> 'accepted' THEN NULL ELSE JSON_OBJECT('regency', t_kpm.regency, 'sub_district', t_kpm.sub_district) END AS location"),
+                DB::raw("CASE WHEN lamaran.status <> 'accepted' THEN NULL ELSE JSON_OBJECT('regency', s_d.regency, 'sub_district', s_d.sub_district) END AS lokasi_sekolah")
+
             )
             ->get();
+        $mahasiswa->transform(function ($item) {
+            $item->location = json_decode($item->location);
+            $item->lokasi_sekolah = json_decode($item->lokasi_sekolah);
+
+            return $item;
+        });
 
 
         return Inertia::render('Admin/pages/Data/PPKPM/ListMahasiswaPPKPM', [

@@ -169,9 +169,7 @@ const DetailLowonganKPM = ({ flash, tempat_kpm, pelamar }) => {
                                                     Jumlah Pelamar
                                                 </td>
                                                 <td className="text-gray-950 font-semibold align-top">
-                                                    {
-                                                        tempat_kpm?.accepted_pelamar_count
-                                                    }
+                                                    {tempat_kpm?.jumlah_pelamar}
                                                 </td>
                                             </tr>
 
@@ -187,7 +185,8 @@ const DetailLowonganKPM = ({ flash, tempat_kpm, pelamar }) => {
                                             </tr>
                                             <tr className="gap-3">
                                                 <td className="text-gray-600 text-end align-top pr-2">
-                                                    Jumlah Laki-Laki
+                                                    Total Laki-Laki telah
+                                                    diterima
                                                 </td>
                                                 <td className="text-gray-950 font-semibold align-top">
                                                     {tempat_kpm?.jumlah_pria}
@@ -195,7 +194,8 @@ const DetailLowonganKPM = ({ flash, tempat_kpm, pelamar }) => {
                                             </tr>
                                             <tr className="gap-3">
                                                 <td className="text-gray-600 text-end align-top pr-2">
-                                                    Jumlah Perempuan
+                                                    Total Perempuan telah
+                                                    diterima
                                                 </td>
                                                 <td className="text-gray-950 font-semibold align-top">
                                                     {tempat_kpm?.jumlah_wanita}

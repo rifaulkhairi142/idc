@@ -48,11 +48,22 @@ class TempatKPM extends Controller
             'tempat_kpm_tbl.id',
             'tempat_kpm_tbl.name',
             'tempat_kpm_tbl.qouta',
+            DB::raw('
+                JSON_OBJECT(
+                    "regency", tempat_kpm_tbl.regency,
+                    "sub_district", tempat_kpm_tbl.sub_district,
+                    "village", tempat_kpm_tbl.village
+                ) AS location
+            '),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = "accepted" AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id) AS accepted_pelamar_count'),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Pria"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_pria'),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Wanita"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_wanita')
 
         )->get();
+        $tempat_kpm->transform(function ($item) {
+            $item->location = json_decode($item->location);
+            return $item;
+        });
         return Inertia::render('Admin/pages/KPM/TempatKPM', ['tempat_kpm' => $tempat_kpm]);
     }
 

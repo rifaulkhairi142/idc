@@ -23,6 +23,8 @@ class LowonganKPM extends Controller
             ->join('mahasiswa_tbl as m_t', 'lamaran_kpm_tbl.username_mahasiswa', '=', 'm_t.nim')
             ->where('m_t.jk', 'Wanita')
             ->count();
+        $tempat_kpm['jumlah_pelamar'] = LamaranKPM::where('lamaran_kpm_tbl.id_tempat_kpm', $id)
+            ->count();
 
 
         $pelamar = LamaranKPM::join('tempat_kpm_tbl as t_kpm', 'lamaran_kpm_tbl.id_tempat_kpm', '=', 't_kpm.id')
