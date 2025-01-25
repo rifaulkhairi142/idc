@@ -2,6 +2,8 @@
 
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\LengkapiProfil;
+use App\Http\Middleware\OptKecamatan;
+use App\Http\Middleware\OptSekolah;
 use App\Http\Middleware\PendaftaranKPM;
 use App\Http\Middleware\PendaftaranPPL;
 use App\Http\Middleware\Profil;
@@ -29,6 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'supervisor' => Supervisor::class,
             'user' => User::class,
             'profil' => Profil::class,
+            'opt-kecamatan' => OptKecamatan::class,
+            'opt-sekolah' => OptSekolah::class,
             'open_kpm' => PendaftaranKPM::class,
             'open_ppl' => PendaftaranPPL::class,
             'save_profil' => LengkapiProfil::class,

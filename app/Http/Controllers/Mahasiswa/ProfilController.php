@@ -77,6 +77,7 @@ class ProfilController extends Controller
 
                     $custom_file_name = 'transkrip_' . Auth::user()->username . '.' . $file->getClientOriginalExtension();
                     $file_path = $file->storeAs('transkrip_nilai', $custom_file_name, 'public');
+
                     $validated['link_transkrip_nilai'] = $file_path;
                     unset($validated['transkrip']);
                     $validated['status'] = 'submitted';

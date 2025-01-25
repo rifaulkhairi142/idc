@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminKecamatanController;
+use App\Http\Controllers\Admin\AdminSekolahController;
+use App\Http\Controllers\Admin\CamatKeuchikController;
+use App\Http\Controllers\Admin\KepsekkPamongController;
 use App\Http\Controllers\Admin\LowonganPPLController;
 use App\Http\Controllers\Admin\MahasiswaKPMController;
 use App\Http\Controllers\Admin\MahasiswaPPKPMController;
@@ -12,12 +16,15 @@ use App\Http\Controllers\Admin\TempatKPM;
 use App\Http\Controllers\Admin\TempatPPLController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeControler;
+use App\Http\Controllers\Mahasiswa\Classroom\HomeController;
 use App\Http\Controllers\Mahasiswa\LowonganKPM;
 use App\Http\Controllers\Mahasiswa\LowonganPPL;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\NilaiController;
 use App\Http\Controllers\Mahasiswa\ProfilController as MahasiswaProfilController;
 use App\Http\Controllers\Mahasiswa\RiwayatLamaran;
+use App\Http\Controllers\OperatorKecamatan\OperatorKecamatanController;
+use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\Supervisor\SupervisorController;
@@ -28,10 +35,30 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 
+Route::middleware(['auth', 'opt-sekolah'])->group(function () {
+    Route::get('/operator-sekolah/dashboard', [OpratorSekolahController::class, 'index']);
+    Route::get('/operator-sekolah/data/kepsek-pamong', [OpratorSekolahController::class, 'kepsek_pamong']);
+    Route::get('/operator-sekolah/data/kepsek_pamong/add', [OpratorSekolahController::class, 'kepsek_pamong_add']);
+    Route::get('/operator-sekolah/data/kepsek_pamong/detail/{id}', [OpratorSekolahController::class, 'kepsek_pamong_detail']);
+    // Route::get('/operator-sekolah/data/kepsek-pamong', [OpratorSekolahController::class, 'kepsek_pamong']);
+});
+
+Route::middleware(['auth', 'opt-kecamatan'])->group(function () {
+    Route::get('/operator-kecamatan/dashboard', [OperatorKecamatanController::class, 'index']);
+    Route::get('/operator-kecamatan/data/camat-keuchik', [OperatorKecamatanController::class, 'camat_keuchik']);
+    Route::get('/operator-kecamatan/data/camat-keuchik/add', [OperatorKecamatanController::class, 'camat_keuchik_add']);
+    Route::get('/operator-kecamatan/data/camat-keuchik/detail/{id}', [OperatorKecamatanController::class, 'camat_keuchik_detail']);
+});
+Route::middleware([])->group(function () {
+    Route::get('/mahasiswa/classroom/1/home', [HomeController::class, 'index']);
+});
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name("admin.dashboard");
-
+    Route::get('/admin/data/camat-keuchik', [CamatKeuchikController::class, 'list']);
+    Route::get('/admin/data/kepsek-pamong', [KepsekkPamongController::class, 'list']);
+    Route::get('/admin/data/kepsek-pamong/detail/{id}', [KepsekkPamongController::class, 'detail']);
+    Route::get('/admin/camat-keuchik/detail/{id}', [CamatKeuchikController::class, 'detail']);
 
     Route::get('/admin/daftarprodi', [ProdiController::class, 'show'])->name("admin.daftarprodi");
     Route::get('/admin/prodi/add', [ProdiController::class, 'add'])->name('admin.prodi.add');
@@ -112,6 +139,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route::post('/admin/importdataprodi', [ProdiController::class, 'importprodi'])->name("admin.importdataprodi");
     Route::get('/admin/settings', [SettingController::class, 'index'])->name('admin.settings');
     Route::post('/admin/settings/update', [SettingController::class, 'update'])->name('admin.settings.update');
+
+
+    Route::get('/admin/admin-sekolah/list', [AdminSekolahController::class, 'index']);
+    Route::get('/admin/admin-kecamatan/list', [AdminKecamatanController::class, 'index']);
 });
 
 

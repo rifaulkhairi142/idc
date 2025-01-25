@@ -18,6 +18,10 @@ class User
         if ($request->user()->role != 'user') {
             if ($request->user()->role === 'admin') {
                 return redirect('admin/dashboard');
+            } else if ($request->user()->role === 'opt-kecamatan') {
+                return redirect('/operator-kecamatan/data/camat-keuchik');
+            } else if ($request->user()->role === 'opt-sekolah') {
+                return redirect('/operator-sekolah/data/kepsek-pamong');
             } else {
                 return redirect('supervisor/dashboard');
             }

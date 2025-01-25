@@ -4,7 +4,7 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { FaAngleRight } from "react-icons/fa6";
 
 import { AiOutlineDatabase } from "react-icons/ai";
-import { LuUsers2 } from "react-icons/lu";
+import { LuUsers } from "react-icons/lu";
 import { Link, router } from "@inertiajs/react";
 
 const Sidebar = ({ tabId }) => {
@@ -95,6 +95,26 @@ const Sidebar = ({ tabId }) => {
                                         }
                                     >
                                         Mahasiswa PPKPM
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={(e) =>
+                                            router.get(
+                                                "/admin/data/camat-keuchik"
+                                            )
+                                        }
+                                    >
+                                        Camat & keuchik
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={(e) =>
+                                            router.get(
+                                                "/admin/data/kepsek-pamong"
+                                            )
+                                        }
+                                    >
+                                        Kepsek & Pamong
                                     </Button>
                                 </div>
                             </div>
@@ -245,7 +265,7 @@ const Sidebar = ({ tabId }) => {
                                 onClick={() => isOpenSubmenu(4)}
                             >
                                 <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md">
-                                    <LuUsers2 />
+                                    <LuUsers />
                                 </span>
                                 Pengguna
                                 <span
@@ -294,6 +314,26 @@ const Sidebar = ({ tabId }) => {
                                         }}
                                     >
                                         Mahasiswa
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => {
+                                            router.visit(
+                                                "/admin/admin-sekolah/list"
+                                            );
+                                        }}
+                                    >
+                                        Admin Sekolah
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => {
+                                            router.visit(
+                                                "/admin/admin-kecamatan/list"
+                                            );
+                                        }}
+                                    >
+                                        Admin Kecamatan
                                     </Button>
                                 </div>
                             </div>
