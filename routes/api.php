@@ -14,6 +14,8 @@ use App\Models\AdminSekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Admin\SupervisorController;
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -48,3 +50,8 @@ Route::get('/operator-sekolah/data/mahasiswa', [KepsekkPamongController::class, 
 Route::post('/admin/data/kepsek-pamong/update-status/{id}', [KepsekkPamongController::class, 'update_status']);
 Route::post('/admin/data/camat-keuchik/update-status/{id}', [CamatKeuchikController::class, 'update_status']);
 
+Route::get('/admin/daftarsupervisor', [SupervisorController::class, 'index']);
+Route::post('/admin/daftarsupervisor', [SupervisorController::class, 'save']);
+Route::get('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'show']);
+Route::put('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'update']);
+Route::delete('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'delete']);
