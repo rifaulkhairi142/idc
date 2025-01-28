@@ -4,6 +4,8 @@ import { Head, router } from "@inertiajs/react";
 import {
     Alert,
     AlertTitle,
+    Autocomplete,
+    Box,
     Button,
     FormControl,
     InputLabel,
@@ -11,9 +13,12 @@ import {
     Select,
     styled,
     TextField,
+    Typography,
 } from "@mui/material";
+import axios from "axios";
 import { Input } from "postcss";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { RiAttachment2 } from "react-icons/ri";
@@ -41,19 +46,27 @@ function AddKepsekPamong({ base_url, data_opt }) {
         no_npwp: null,
         dokumen: null,
         jabatan: null,
+        nama_di_buku_rekening: null,
+        jumlah_mahasiswa_bimbingan: null,
+        mahasiswa: null,
     });
 
     const [responseError, setResponseError] = useState(null);
 
     const [name, setName] = useState(null);
     const [nip, setNip] = useState(null);
-    const [pangkatGolongan, setPangkatGolongan] = useState(null);
+    const [pangkatGolongan, setPangkatGolongan] = useState("");
     const [namaBank, setNamaBank] = useState("");
     const [noRekening, setNoRekening] = useState(null);
     const [noNPWP, setNoNPWP] = useState(null);
     const [dokumen, setDokumen] = useState(null);
     const [jabatan, setJabatan] = useState("");
     const [loading, setLoading] = useState(false);
+    const [namaDiBukuRek, setNamaDiBukuRek] = useState(null);
+    const [usernameMahasiswa, setUsernameMahasiswa] = useState(null);
+    const [dataMahasiswa, setDataMahasiswa] = useState(null);
+    const [jumlhMhswBimbingan, setJumlhMhswBimbingan] = useState(0);
+    const [mahasiswa, setMahasiwa] = useState(null);
 
     const handleNameChange = (e) => {
         setName(e.target.value);
@@ -154,7 +167,7 @@ function AddKepsekPamong({ base_url, data_opt }) {
         if (nip === null) {
             newErrors.nip = "NIP wajib diisi";
         }
-        if (pangkatGolongan === null ) {
+        if (pangkatGolongan === null) {
             newErrors.pangkat_golongan = "Pangkat & golongan wajib diisi";
         }
         if (namaBank === "") {
@@ -171,10 +184,40 @@ function AddKepsekPamong({ base_url, data_opt }) {
         }
         if (jabatan === "") newErrors.jabatan = "Jabatan wajib dipilih";
 
+        if (namaDiBukuRek === null) {
+            newErrors.nama_di_buku_rekening =
+                "Nama di buku rekening wajib diisi";
+        }
+        // if (usernameMahasiswa === null) {
+        //     newErrors.username_mahasiswa = "Mahasiswa wajib dipilih";
+        // }
+        if (jabatan === "Guru Pamong") {
+            if (mahasiswa === null) {
+                newErrors.mahasiswa = "Mahasiswa Bimbingan Wajib diisi";
+            } else {
+                newErrors.mahasiswa = null;
+            }
+        }
+
         setErrors(newErrors);
 
         console.log(newErrors); // Log the updated errors
         return Object.values(newErrors).every((value) => value === null);
+    };
+
+    const getMahasiswa = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                `${base_url}/api/operator-sekolah/data/mahasiswa?id_sekolah=${data_opt.id_sekolah}`
+            );
+            setDataMahasiswa(response.data.data);
+            console.log(response.data.data);
+        } catch (err) {
+            setResponseError(err.response?.data?.message);
+        } finally {
+            setLoading(false);
+        }
     };
     const submit = async () => {
         if (validate()) {
@@ -192,6 +235,8 @@ function AddKepsekPamong({ base_url, data_opt }) {
                 formData.append("dokumen", dokumen);
                 formData.append("id_sekolah", data_opt.id_sekolah);
                 formData.append("nama_bank", namaBank);
+                formData.append("nama_di_buku_rekening", namaDiBukuRek);
+                formData.append("username_mahasiswa", mahasiswa?.username);
 
                 const response = await axios.post(
                     `${base_url}/api/operator-sekolah/data/kepsek_pamong/save`,
@@ -213,6 +258,10 @@ function AddKepsekPamong({ base_url, data_opt }) {
             return;
         }
     };
+
+    useEffect(() => {
+        getMahasiswa();
+    }, []);
 
     const handleJabatanChange = (e) => {
         setJabatan(e.target.value);
@@ -236,7 +285,7 @@ function AddKepsekPamong({ base_url, data_opt }) {
                 )}
                 <Alert severity="info">
                     <AlertTitle>Info Pengisian</AlertTitle>
-                    <ol class="!list-decimal">
+                    <ol class="!list-decimal pl-5 space-y-2">
                         <li>
                             Setelah memasukkan nama silakan pilih jabatan yang
                             sesuai
@@ -278,6 +327,30 @@ function AddKepsekPamong({ base_url, data_opt }) {
 
                         {errors.name && <InputError message={errors.name} />}
                     </div>
+                    <div className="flex flex-col gap-x-3">
+                        <TextField
+                            fullWidth
+                            value={namaDiBukuRek}
+                            label="Nama di buku rekening"
+                            onChange={(e) => setNamaDiBukuRek(e.target.value)}
+                            sx={{
+                                "& .MuiOutlinedInput-root.Mui-focused": {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                                "& .MuiInputBase-input:focus": {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                            }}
+                        />
+
+                        {errors.nama_di_buku_rekening && (
+                            <InputError
+                                message={errors.nama_di_buku_rekening}
+                            />
+                        )}
+                    </div>
                     <div className="flex flex-col ">
                         <TextField
                             fullWidth
@@ -297,27 +370,114 @@ function AddKepsekPamong({ base_url, data_opt }) {
                         />
                         {errors.nip && <InputError message={errors.nip} />}
                     </div>
+
                     <div className="flex flex-col">
-                        <TextField
-                            fullWidth
-                            value={pangkatGolongan}
-                            label="Pangkat & Golongan"
-                            onChange={(e) => handlePangkatDanGolongan(e)}
-                            sx={{
-                                "& .MuiOutlinedInput-root.Mui-focused": {
-                                    outline: "none",
-                                    boxShadow: "none",
-                                },
-                                "& .MuiInputBase-input:focus": {
-                                    outline: "none",
-                                    boxShadow: "none",
-                                },
-                            }}
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="bank-name">
+                                Pangkat dan Golongan
+                            </InputLabel>
+                            <Select
+                                labelId="bank-name"
+                                id="bank-name"
+                                value={pangkatGolongan}
+                                label="Nama Bank"
+                                onChange={(e) => handlePangkatDanGolongan(e)}
+                            >
+                                <MenuItem value={"Pembina/(IVA)"}>
+                                    Pembina/(IVA)
+                                </MenuItem>
+                                <MenuItem value={"Pembina Tingkat 1/(IVB)"}>
+                                    Pembina Tingkat 1/(IVB)
+                                </MenuItem>
+                                <MenuItem value={"Pembina Utama Muda/(IVC)"}>
+                                    Pembina Utama Muda/(IVC)
+                                </MenuItem>
+                                <MenuItem value={"Pembina Utama Madya/(IVD)"}>
+                                    Pembina Utama Madya/(IVD)
+                                </MenuItem>
+                                <MenuItem value={"Pembina Utama/(IVE)"}>
+                                    Pembina Utama/(IVE)
+                                </MenuItem>
+
+                                <MenuItem value={"Penata Muda/(IIIA)"}>
+                                    Penata Muda/(IIIA)
+                                </MenuItem>
+                                <MenuItem
+                                    value={"Penata Muda Tingkat 1/(IIIB)"}
+                                >
+                                    Penata Muda Tingkat 1/(IIIB)
+                                </MenuItem>
+                                <MenuItem value={"Penata/(IIIC)"}>
+                                    Penata/(IIIC)
+                                </MenuItem>
+                                <MenuItem value={"Penata Tingkat1/(IIID)"}>
+                                    Penata Tingkat 1/(IIID)
+                                </MenuItem>
+                                <MenuItem value={"-"}>Lainnya</MenuItem>
+                            </Select>
+                        </FormControl>
                         {errors.pangkat_golongan && (
                             <InputError message={errors.pangkat_golongan} />
                         )}
                     </div>
+                    {jabatan === "Guru Pamong" && (
+                        <div>
+                            <Autocomplete
+                                id="mahasiswa"
+                                value={mahasiswa}
+                                getOptionLabel={(option) => option.name}
+                                options={dataMahasiswa}
+                                onChange={(e, value) => {
+                                    setMahasiwa(value);
+                                    
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Mahasiswa Bimbingan"
+                                        sx={{
+                                            "& .MuiOutlinedInput-root.Mui-focused":
+                                                {
+                                                    outline: "none",
+                                                    boxShadow: "none",
+                                                },
+                                            "& .MuiInputBase-input:focus": {
+                                                outline: "none",
+                                                boxShadow: "none",
+                                            },
+                                        }}
+                                    />
+                                )}
+                                renderOption={(props, option) => (
+                                    <Box
+                                        {...props}
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            p: 1,
+                                        }}
+                                    >
+                                        <Box sx={{ textAlign: "left" }}>
+                                            <Typography variant="body1">
+                                                {option.name}
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                color="textSecondary"
+                                            >
+                                                {`NIM. ${option.username}`}
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+                                )}
+                                fullWidth
+                            />
+                            {errors.mahasiswa && (
+                                <InputError message={errors.mahasiswa} />
+                            )}
+                        </div>
+                    )}
+
                     <div className="flex flex-col">
                         <FormControl fullWidth>
                             <InputLabel id="bank-name">Nama Bank</InputLabel>
@@ -363,6 +523,7 @@ function AddKepsekPamong({ base_url, data_opt }) {
                             <InputError message={errors.nama_bank} />
                         )}
                     </div>
+
                     <div className="flex flex-col">
                         <TextField
                             fullWidth

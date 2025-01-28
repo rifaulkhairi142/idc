@@ -33,6 +33,14 @@ function Dashboard({ data, base_url }) {
                             </tr>
                             <tr>
                                 <td className="pr-3 text-right align-top font-semibold">
+                                    Nama di Buku Rekening
+                                </td>
+                                <td className="mr-4 text-left align-top">
+                                    {data?.nama_di_buku_rekening}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td className="pr-3 text-right align-top font-semibold">
                                     Pangkat & Golongan
                                 </td>
                                 <td className="mr-4 text-left align-top">

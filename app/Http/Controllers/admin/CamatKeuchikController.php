@@ -14,6 +14,29 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CamatKeuchikController extends Controller
 {
+    public function update_status(Request $request, $id)
+    {
+        $data = [];
+        DB::beginTransaction();
+        try {
+
+            $record = AmprahamKPM::find($id);
+            $dt = [
+                'status' => $request->status,
+                'keterangan' => $request->keterangan,
+            ];
+            DB::commit();
+            $record->update($dt);
+            $data['status'] = 'success';
+            $data['message'] = 'Status berhasil diupdate';
+            return response()->json($data);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $data['status'] = 'error';
+            $data['message'] = $e->getMessage();
+            return response()->json($data);
+        }
+    }
     public function list()
     {
         return Inertia::render('Admin/pages/Data/CamatKeuchik/List', ['base_url' => url('/')]);
@@ -30,7 +53,7 @@ class CamatKeuchikController extends Controller
             });
         }
         $query->selectRaw(
-            'ROW_NUMBER() OVER (ORDER BY ampraham_kpm_tbl.id) AS row_index,
+            'ROW_NUMBER() OVER (ORDER BY ampraham_kpm_tbl.status ASC, ampraham_kpm_tbl.id ASC) AS row_index,
                ampraham_kpm_tbl.id,
                ampraham_kpm_tbl.name,
                CASE WHEN ampraham_kpm_tbl.nip = "null" then "-" else ampraham_kpm_tbl.nip end as nip,
@@ -39,6 +62,9 @@ class CamatKeuchikController extends Controller
               ampraham_kpm_tbl.jabatan,
               nama_bank,
               no_rekening,
+              ampraham_kpm_tbl.status,
+              ampraham_kpm_tbl.keterangan,
+              nama_di_buku_rekening,
               no_npwp,
                CASE 
                     WHEN ampraham_kpm_tbl.jabatan = "Camat" 

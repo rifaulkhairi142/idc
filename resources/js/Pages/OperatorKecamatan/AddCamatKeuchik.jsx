@@ -46,6 +46,7 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
         id_kecamatan: null,
         nama_bank: null,
         no_rekening: null,
+        nama_di_buku_rekening: null,
         no_npwp: null,
         dokumen: null,
         jabatan: null,
@@ -55,13 +56,14 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
 
     const [name, setName] = useState(null);
     const [nip, setNip] = useState(null);
-    const [pangkatGolongan, setPangkatGolongan] = useState(null);
+    const [pangkatGolongan, setPangkatGolongan] = useState("");
     const [namaBank, setNamaBank] = useState("");
     const [noRekening, setNoRekening] = useState(null);
     const [noNPWP, setNoNPWP] = useState(null);
     const [dokumen, setDokumen] = useState(null);
     const [jabatan, setJabatan] = useState("");
     const [loading, setLoading] = useState(false);
+    const [namaDiBukuRek, setNamaDiBukuRek] = useState(null);
 
     const [villageData, setVillageData] = useState(
         desa(data_opt?.id_kecamatan) || []
@@ -225,6 +227,7 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
                 formData.append("id_desa", village?.kode);
                 formData.append("id_kecamatan", data_opt?.id_kecamatan);
                 formData.append("kecamatan", auth?.user?.name);
+                formData.append("nama_di_buku_rekening", namaDiBukuRek);
                 console.log(village);
 
                 const response = await axios.post(
@@ -270,7 +273,7 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
                 )}
                 <Alert severity="info">
                     <AlertTitle>Info Pengisian</AlertTitle>
-                    <ol class="!list-decimal">
+                    <ol class="!list-decimal pl-5 space-y-2">
                         <li>
                             Setelah memasukkan nama silakan pilih jabatan yang
                             sesuai
@@ -298,6 +301,26 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
                             value={name}
                             label="Nama"
                             onChange={(e) => handleNameChange(e)}
+                            sx={{
+                                "& .MuiOutlinedInput-root.Mui-focused": {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                                "& .MuiInputBase-input:focus": {
+                                    outline: "none",
+                                    boxShadow: "none",
+                                },
+                            }}
+                        />
+
+                        {errors.name && <InputError message={errors.name} />}
+                    </div>
+                    <div className="flex flex-col gap-x-3">
+                        <TextField
+                            fullWidth
+                            value={namaDiBukuRek}
+                            label="Nama di buku rekening"
+                            onChange={(e) => setNamaDiBukuRek(e.target.value)}
                             sx={{
                                 "& .MuiOutlinedInput-root.Mui-focused": {
                                     outline: "none",
@@ -356,25 +379,62 @@ function AddCamatKeuchik({ base_url, data_opt, auth }) {
                                 )}
                             </div>
                             <div className="flex flex-col">
-                                <TextField
-                                    fullWidth
-                                    value={pangkatGolongan}
-                                    label="Pangkat & Golongan"
-                                    onChange={(e) =>
-                                        handlePangkatDanGolongan(e)
-                                    }
-                                    sx={{
-                                        "& .MuiOutlinedInput-root.Mui-focused":
-                                            {
-                                                outline: "none",
-                                                boxShadow: "none",
-                                            },
-                                        "& .MuiInputBase-input:focus": {
-                                            outline: "none",
-                                            boxShadow: "none",
-                                        },
-                                    }}
-                                />
+                                <FormControl fullWidth>
+                                    <InputLabel id="bank-name">
+                                        Pangkat dan Golongan
+                                    </InputLabel>
+                                    <Select
+                                        labelId="bank-name"
+                                        id="bank-name"
+                                        value={pangkatGolongan}
+                                        label="Nama Bank"
+                                        onChange={(e) =>
+                                            handlePangkatDanGolongan(e)
+                                        }
+                                    >
+                                        <MenuItem value={"Pembina/(IVA)"}>
+                                            Pembina/(IVA)
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={"Pembina Tingkat 1/(IVB)"}
+                                        >
+                                            Pembina Tingkat 1/(IVB)
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={"Pembina Utama Muda/(IVC)"}
+                                        >
+                                            Pembina Utama Muda/(IVC)
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={"Pembina Utama Madya/(IVD)"}
+                                        >
+                                            Pembina Utama Madya/(IVD)
+                                        </MenuItem>
+                                        <MenuItem value={"Pembina Utama/(IVE)"}>
+                                            Pembina Utama/(IVE)
+                                        </MenuItem>
+
+                                        <MenuItem value={"Penata Muda/(IIIA)"}>
+                                            Penata Muda/(IIIA)
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={
+                                                "Penata Muda Tingkat 1/(IIIB)"
+                                            }
+                                        >
+                                            Penata Muda Tingkat 1/(IIIB)
+                                        </MenuItem>
+                                        <MenuItem value={"Penata/(IIIC)"}>
+                                            Penata/(IIIC)
+                                        </MenuItem>
+                                        <MenuItem
+                                            value={"Penata Tingkat1/(IIID)"}
+                                        >
+                                            Penata Tingkat 1/(IIID)
+                                        </MenuItem>
+                                        <MenuItem value={"-"}>Lainnya</MenuItem>
+                                    </Select>
+                                </FormControl>
                                 {errors.pangkat_golongan && (
                                     <InputError
                                         message={errors.pangkat_golongan}

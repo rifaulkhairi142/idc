@@ -4,7 +4,7 @@ import Sidebar from "@/Components/admin/Sidebar/Sidebar";
 import Header from "@/Components/admin/Header/Header";
 import MUIDataTable from "mui-datatables";
 import { Head, Link, router } from "@inertiajs/react";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Alert, Button, Chip, Snackbar } from "@mui/material";
 import { MdDelete, MdOpenInNew } from "react-icons/md";
 import { GrFormView } from "react-icons/gr";
 import { TiEdit } from "react-icons/ti";
@@ -298,7 +298,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                     </button>
                                 </div>
                             </div>
-                            <div className="relative overflow-x-auto min-h-50">
+                            <div className="relative pl-4  overflow-x-auto min-h-50">
                                 {loading && (
                                     <div className="absolute z-10 w-full h-full flex items-center justify-center bg-white/70">
                                         <ThreeDot
@@ -321,7 +321,25 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                 scope="col"
                                                 className="px-4 py-3"
                                             >
+                                                Nama Mahasiswa
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                NIM Mahasiswa
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
                                                 Name
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nama Di Buku Rekening
                                             </th>
                                             <th
                                                 scope="col"
@@ -365,6 +383,18 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                             >
                                                 No NPWP
                                             </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Status
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Keterangan
+                                            </th>
 
                                             <th
                                                 scope="col"
@@ -389,7 +419,18 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                     {item.row_index}
                                                 </th>
                                                 <td className="px-4 py-3">
+                                                    {item?.nama_mahasiswa}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nim}
+                                                </td>
+                                                <td className="px-4 py-3">
                                                     {item?.name}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {
+                                                        item?.nama_di_buku_rekening
+                                                    }
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     {item?.nip}
@@ -411,6 +452,32 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     {item?.no_npwp}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.status ===
+                                                        "diterima" && (
+                                                        <Chip
+                                                            label={item?.status}
+                                                            color="success"
+                                                        />
+                                                    )}
+                                                    {item?.status ===
+                                                        "ditolak" && (
+                                                        <Chip
+                                                            label={item?.status}
+                                                            color="error"
+                                                        />
+                                                    )}
+                                                    {item?.status ===
+                                                        "di-review" && (
+                                                        <Chip
+                                                            label={item?.status}
+                                                            color="warning"
+                                                        />
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.keterangan}
                                                 </td>
 
                                                 <td className="px-4 py-3 flex items-center justify-end">

@@ -44,3 +44,7 @@ Route::post('/admin/data/kepsek-pamong/export', [KepsekkPamongController::class,
 Route::post('/admin/data/camat-keuchik/export', [CamatKeuchikController::class, 'export']);
 Route::get('/admin/data/camat-keuchik/query', [CamatKeuchikController::class, 'query']);
 Route::post('/admin/data/camat-keuchik/delete/{id}', [CamatKeuchikController::class, 'delete']);
+Route::get('/operator-sekolah/data/mahasiswa', [KepsekkPamongController::class, 'mahasiswa']);
+Route::post('/admin/data/kepsek-pamong/update-status/{id}', [KepsekkPamongController::class, 'update_status']);
+Route::post('/admin/data/camat-keuchik/update-status/{id}', [CamatKeuchikController::class, 'update_status']);
+

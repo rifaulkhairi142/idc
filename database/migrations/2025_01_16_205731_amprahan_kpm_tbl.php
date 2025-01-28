@@ -15,8 +15,10 @@ return new class extends Migration
             $table->string('no_npwp');
             $table->string('name');
             $table->string('nip');
-            $table->string('status')->nullable();
+            $table->string('status')->default('di-review');
             $table->string('keterangan')->nullable();
+            $table->string('nama_di_buku_rekening');
+
             $table->string('nama_bank');
             $table->string('kecamatan')->nullable();
             $table->string('id_kecamatan')->nullable();

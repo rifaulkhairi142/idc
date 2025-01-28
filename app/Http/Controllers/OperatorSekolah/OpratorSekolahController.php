@@ -54,7 +54,8 @@ class OpratorSekolahController extends Controller
     public function query(Request $request)
     {
         $query = AmprahamPPL::where('id_sekolah', $request->id_sekolah)
-            ->join('sekolah_tbl as s_tbl', 'ampraham_ppl_tbl.id_sekolah', '=', 's_tbl.id');
+            ->join('sekolah_tbl as s_tbl', 'ampraham_ppl_tbl.id_sekolah', '=', 's_tbl.id')
+            ->leftjoin('users as us', 'ampraham_ppl_tbl.username_mahasiswa', '=', 'us.username');
 
         if ($request->has('search_key') && !empty($request->search_key)) {
             $query->where(function ($subQuery) use ($request) {
@@ -66,7 +67,9 @@ class OpratorSekolahController extends Controller
         $query->selectRaw(
             'ROW_NUMBER() OVER (ORDER BY ampraham_ppl_tbl.id) AS row_index,
                ampraham_ppl_tbl.*,
-                s_tbl.name as nama_sekolah'
+                s_tbl.name as nama_sekolah,
+                us.name as nama_mahasiswa,
+                us.username as nim'
         );
 
         $data = $query->paginate(10);
@@ -103,6 +106,4 @@ class OpratorSekolahController extends Controller
     }
 
     public function edit() {}
-
-   
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Exports\KepsekPamongExport;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\User;
 use App\Models\AmprahamPPL;
+use App\Models\LamaranPPL;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,53 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class KepsekkPamongController extends Controller
 {
+
+    public function update_status(Request $request, $id)
+    {
+        $data = [];
+        DB::beginTransaction();
+        try {
+
+            $record = AmprahamPPL::find($id);
+            $dt = [
+                'status' => $request->status,
+                'keterangan' => $request->keterangan,
+            ];
+            DB::commit();
+            $record->update($dt);
+            $data['status'] = 'success';
+            $data['message'] = 'Status berhasil diupdate';
+            return response()->json($data);
+        } catch (Exception $e) {
+            DB::rollBack();
+            $data['status'] = 'error';
+            $data['message'] = $e->getMessage();
+            return response()->json($data);
+        }
+    }
+
+    public function mahasiswa(Request $request)
+    {
+        $data = [];
+        try {
+            $data_mahasiswa = LamaranPPL::join('lowongan_ppl_tbl as l_ppl', 'lamaran_ppl_tbl.id_lowongan_ppl', 'l_ppl.id')
+                ->join('users as us', 'lamaran_ppl_tbl.username_mahasiswa', '=', 'us.username')
+                ->where('status', 'accepted')
+                ->where('l_ppl.id_sekolah', $request->id_sekolah)
+                ->select(
+                    'us.name',
+                    'us.username'
+                )
+                ->get();
+            $data['status'] = 'error';
+            $data['data'] = $data_mahasiswa;
+            return response()->json($data);
+        } catch (Exception $err) {
+            $data['status'] = 'error';
+            $data['message'] = $err->getMessage();
+            return response()->json($data);
+        }
+    }
 
     public function detail($id)
     {
@@ -33,7 +82,8 @@ class KepsekkPamongController extends Controller
     }
     public function query(Request $request)
     {
-        $query = AmprahamPPL::join('sekolah_tbl as s_tbl', 'ampraham_ppl_tbl.id_sekolah', '=', 's_tbl.id');
+        $query = AmprahamPPL::join('sekolah_tbl as s_tbl', 'ampraham_ppl_tbl.id_sekolah', '=', 's_tbl.id')
+            ->leftjoin('users as us', 'ampraham_ppl_tbl.username_mahasiswa', '=', 'us.username');
 
         if ($request->has('search_key') && !empty($request->search_key)) {
             $query->where(function ($subQuery) use ($request) {
@@ -43,9 +93,11 @@ class KepsekkPamongController extends Controller
             });
         }
         $query->selectRaw(
-            'ROW_NUMBER() OVER (ORDER BY ampraham_ppl_tbl.id) AS row_index,
+            'ROW_NUMBER() OVER (ORDER BY ampraham_ppl_tbl.status ASC, ampraham_ppl_tbl.id ASC) AS row_index,
                ampraham_ppl_tbl.*,
-                s_tbl.name as nama_sekolah'
+                s_tbl.name as nama_sekolah,
+                us.name as nama_mahasiswa,
+                us.username as nim'
         );
 
         $data = $query->paginate(10);

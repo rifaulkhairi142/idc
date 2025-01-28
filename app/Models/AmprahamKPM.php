@@ -17,6 +17,7 @@ class AmprahamKPM extends Model
         'nama_bank',
         'id_desa',
         'id_kecamatan',
+        'nama_di_buku_rekening',
         'no_npwp',
         'name',
         'nip',

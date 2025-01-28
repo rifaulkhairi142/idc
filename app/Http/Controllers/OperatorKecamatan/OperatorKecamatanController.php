@@ -38,7 +38,8 @@ class OperatorKecamatanController extends Controller
                     'no_npwp' => $request->no_npwp,
                     'pangkat_dan_golongan' => $request->pangkat_dan_golongan,
                     'nama_bank' => $request->nama_bank,
-                    'link_document' => $path
+                    'link_document' => $path,
+                    'nama_di_buku_rekening' => $request->nama_di_buku_rekening
                 ];
 
                 AmprahamKPM::create($data);

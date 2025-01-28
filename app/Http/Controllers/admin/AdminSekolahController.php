@@ -37,11 +37,13 @@ class AdminSekolahController extends Controller
                     'name' => $request->name,
                     'nip' => $request->nip,
                     'jabatan' => $request->jabatan,
+                    'username_mahasiswa' => $request->username_mahasiswa,
                     'no_rekening' => $request->no_rekening,
                     'no_npwp' => $request->no_npwp,
                     'id_sekolah' => $request->id_sekolah,
                     'pangkat_dan_golongan' => $request->pangkat_dan_golongan,
                     'nama_bank' => $request->nama_bank,
+                    'nama_di_buku_rekening' => $request->nama_di_buku_rekening,
                     'link_document' => $path
                 ];
 

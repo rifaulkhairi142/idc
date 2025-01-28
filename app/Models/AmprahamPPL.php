@@ -15,6 +15,8 @@ class AmprahamPPL extends Model
         'link_document',
         'no_rekening',
         'no_npwp',
+        'nama_di_buku_rekening',
+        'username_mahasiswa',
         'name',
         'nip',
         'pangkat_dan_golongan',

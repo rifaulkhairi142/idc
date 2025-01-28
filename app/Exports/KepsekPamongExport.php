@@ -14,18 +14,25 @@ class KepsekPamongExport implements FromCollection, WithHeadings, WithMapping, W
     public function collection()
     {
         return DB::table('ampraham_ppl_tbl as ppl')
+
             ->join('sekolah_tbl as s_tbl', 'ppl.id_sekolah', '=', 's_tbl.id')
+            ->leftjoin('users as us', 'ppl.username_mahasiswa', '=', 'us.username')
             ->selectRaw(
                 'ROW_NUMBER() OVER (ORDER BY ppl.id) AS row_index,
+                us.name as nama_mahasiswa,
+                us.username as nim,
                 ppl.name,
+                ppl.nama_di_buku_rekening,
                 ppl.nip,
-                ppl.jabatan,
                 ppl.pangkat_dan_golongan,
                 ppl.jabatan,
+                
                 s_tbl.name as sekolah_name,
+                
                 ppl.nama_bank,
                 ppl.no_rekening,
-                ppl.no_npwp'
+                ppl.no_npwp,
+                ppl.status'
             )
             ->get();
     }
@@ -34,14 +41,18 @@ class KepsekPamongExport implements FromCollection, WithHeadings, WithMapping, W
     {
         return [
             'No',
+            'Nama Mahasiswa',
+            'NIM',
             'Nama',
+            'Nama Di Buku Rekening',
             'NIP',
             'Pangkat & Golongan',
             'Jabatan',
             'Nama Sekolah',
             'Nama Bank',
             'No. Rekening',
-            'No. NPWP'
+            'No. NPWP',
+            'Status'
         ];
     }
 
@@ -49,7 +60,10 @@ class KepsekPamongExport implements FromCollection, WithHeadings, WithMapping, W
     {
         return [
             $row->row_index,
+            $row->nama_mahasiswa,
+            $row->nim,
             $row->name,
+            $row->nama_di_buku_rekening,
             "'" . $row->nip, // Add single quote for text formatting
             $row->pangkat_dan_golongan,
             $row->jabatan,
@@ -57,6 +71,7 @@ class KepsekPamongExport implements FromCollection, WithHeadings, WithMapping, W
             $row->nama_bank,
             "'" . $row->no_rekening, // Ensure no_rekening is treated as text
             "'" . $row->no_npwp, // Ensure no_npwp is treated as text
+            $row->status
         ];
     }
 

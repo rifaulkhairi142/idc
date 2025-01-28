@@ -19,14 +19,14 @@ return new class extends Migration
             $table->string('name');
             $table->string('nip');
             $table->string('nama_bank');
-            $table->string('status')->nullable();
+            $table->string('status')->default('di-review');
             $table->string('keterangan')->nullable();
-
-
+            $table->string('nama_di_buku_rekening');
             $table->string('pangkat_dan_golongan');
+            $table->string('username_mahasiswa')->nullable();
+            // $table->integer('jumlah_mahasiswa')->nullable();
             $table->unsignedBigInteger('id_sekolah');
             $table->timestamps();
-
             $table->string('jabatan');
             $table->foreign('id_sekolah')->references('id')->on('sekolah_tbl')->onDelete('cascade');
         });

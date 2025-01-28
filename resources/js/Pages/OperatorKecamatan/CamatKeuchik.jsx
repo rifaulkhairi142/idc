@@ -1,7 +1,7 @@
 import OperatorSekolahLayout from "@/Layouts/OperatorSekolahLayout";
 import React from "react";
 import { Head, router } from "@inertiajs/react";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -258,6 +258,9 @@ const CamatKeuchik = ({
                                         Name
                                     </th>
                                     <th scope="col" className="px-4 py-3">
+                                        Nama Di Buku Rekening
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
                                         NIP
                                     </th>
                                     <th scope="col" className="px-4 py-3">
@@ -281,6 +284,12 @@ const CamatKeuchik = ({
                                     <th scope="col" className="px-4 py-3">
                                         No NPWP
                                     </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Keterangan
+                                    </th>
 
                                     <th scope="col" className="px-4 py-3">
                                         <span className="sr-only">Actions</span>
@@ -301,6 +310,9 @@ const CamatKeuchik = ({
                                         </th>
                                         <td className="px-4 py-3">
                                             {item?.name}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.nama_di_buku_rekening}
                                         </td>
                                         <td className="px-4 py-3">
                                             {item?.nip}
@@ -325,6 +337,29 @@ const CamatKeuchik = ({
                                         </td>
                                         <td className="px-4 py-3">
                                             {item?.no_npwp}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.status === "diterima" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="success"
+                                                />
+                                            )}
+                                            {item?.status === "ditolak" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="error"
+                                                />
+                                            )}
+                                            {item?.status === "di-review" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="warning"
+                                                />
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.keterangan}
                                         </td>
 
                                         <td className="px-4 py-3 flex items-center justify-end">

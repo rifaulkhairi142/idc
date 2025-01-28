@@ -17,6 +17,7 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
             ->selectRaw(
                 'ROW_NUMBER() OVER (ORDER BY kpm.id) AS row_index,
                 kpm.name,
+                kpm.nama_di_buku_rekening,
                 CASE WHEN kpm.nip = "null" then "-" else kpm.nip end as nip,
                 CASE WHEN kpm.jabatan = "null" then "-" else kpm.jabatan end as jabatan,
                 CASE WHEN kpm.pangkat_dan_golongan = "null" then "-" else kpm.pangkat_dan_golongan end as pangkat_dan_golongan ,
@@ -24,7 +25,8 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
                 CASE WHEN kpm.desa = "null" then "-" else kpm.desa end as desa ,
                 nama_bank,
                 no_rekening,
-                no_npwp'
+                no_npwp,
+                kpm.status'
             )->get();
     }
     public function headings(): array
@@ -32,6 +34,7 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
         return [
             'No',
             'Nama',
+            'Nama Di Buku Rekening',
             'NIP',
             'Jabatan',
             'Pangkat & Golongan',
@@ -39,7 +42,8 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
             'Desa',
             'Nama Bank',
             'No. Rekening',
-            'No. NPWP'
+            'No. NPWP',
+            'Status'
         ];
     }
 
@@ -49,6 +53,7 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
         return [
             $row->row_index,
             $row->name,
+            $row->nama_di_buku_rekening,
             "'" . $row->nip, // Add single quote for text formatting
             $row->jabatan,
             $row->pangkat_dan_golongan,
@@ -57,6 +62,7 @@ class CamatKeuchikExport implements FromCollection, WithHeadings, WithMapping, W
             $row->nama_bank,
             "'" . $row->no_rekening, // Ensure no_rekening is treated as text
             "'" . $row->no_npwp, // Ensure no_npwp is treated as text
+            $row->status,
         ];
     }
 

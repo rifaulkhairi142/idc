@@ -10,10 +10,10 @@ const ClassroomLayout = ({ children }) => {
             {/* <!-- ===== Page Wrapper Start ===== --> */}
             <div className="flex h-screen overflow-hidden">
                 {/* <!-- ===== Sidebar Start ===== --> */}
-                <Sidebar
+                {/* <Sidebar
                     sidebarOpen={sidebarOpen}
                     setSidebarOpen={setSidebarOpen}
-                />
+                /> */}
                 {/* <!-- ===== Sidebar End ===== --> */}
 
                 {/* <!-- ===== Content Area Start ===== --> */}
@@ -27,7 +27,8 @@ const ClassroomLayout = ({ children }) => {
 
                     {/* <!-- ===== Main Content Start ===== --> */}
                     <main>
-                        <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+                        <div className="bg-white border"></div>
+                        <div className="mx-auto max-w-screen-lg p-4 md:p-6 2xl:p-10 justify-center flex">
                             {children}
                         </div>
                         <footer className="flex bg-white p-5 justify-center items-center text-sm dark:bg-black dark:text-bodydark">

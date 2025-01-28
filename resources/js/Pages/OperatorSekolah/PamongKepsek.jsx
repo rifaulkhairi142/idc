@@ -1,7 +1,7 @@
 import OperatorSekolahLayout from "@/Layouts/OperatorSekolahLayout";
 import React from "react";
 import { Head, router } from "@inertiajs/react";
-import { Button } from "@mui/material";
+import { Alert, AlertTitle, Button, Chip } from "@mui/material";
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -194,8 +194,22 @@ const PamongKepsek = ({
                         Tambah
                     </Button>
                 </div>
+
                 <p>{error}</p>
-                <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div className="bg-white dark:bg-gray-800 p-3 relative shadow-md sm:rounded-lg overflow-hidden">
+                    <Alert severity="info">
+                        <AlertTitle>Petunjuk</AlertTitle>
+                        <ol class="!list-decimal pl-5 space-y-2">
+                            <li>
+                                Mohon diisi data kepala sekolah dan guru pamong
+                                dari setiap mahasiswa yang dibimbing 🙏
+                            </li>
+                            <li>
+                                Siapkan berkas scan Buku Rekening dan NPWP
+                                dijadikan satu pdf dengan ukuran maksimal 500kb
+                            </li>
+                        </ol>
+                    </Alert>
                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div className="flex items-center w-full">
                             <label for="simple-search" className="sr-only">
@@ -253,7 +267,17 @@ const PamongKepsek = ({
                                         No
                                     </th>
                                     <th scope="col" className="px-4 py-3">
+                                        Nama Mahasiswa
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        NIM Mahasiswa
+                                    </th>
+
+                                    <th scope="col" className="px-4 py-3">
                                         Name
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Nama di Buku Rekening
                                     </th>
                                     <th scope="col" className="px-4 py-3">
                                         NIP
@@ -276,6 +300,12 @@ const PamongKepsek = ({
                                     <th scope="col" className="px-4 py-3">
                                         No NPWP
                                     </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-4 py-3">
+                                        Keterangan
+                                    </th>
 
                                     <th scope="col" className="px-4 py-3">
                                         <span className="sr-only">Actions</span>
@@ -295,7 +325,16 @@ const PamongKepsek = ({
                                             {item.row_index}
                                         </th>
                                         <td className="px-4 py-3">
+                                            {item?.nama_mahasiswa}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.nim}
+                                        </td>
+                                        <td className="px-4 py-3">
                                             {item?.name}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.nama_di_buku_rekening}
                                         </td>
                                         <td className="px-4 py-3">
                                             {item?.nip}
@@ -317,6 +356,29 @@ const PamongKepsek = ({
                                         </td>
                                         <td className="px-4 py-3">
                                             {item?.no_npwp}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.status === "diterima" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="success"
+                                                />
+                                            )}
+                                            {item?.status === "ditolak" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="error"
+                                                />
+                                            )}
+                                            {item?.status === "di-review" && (
+                                                <Chip
+                                                    label={item?.status}
+                                                    color="warning"
+                                                />
+                                            )}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {item?.keterangan}
                                         </td>
 
                                         <td className="px-4 py-3 flex items-center justify-end">
