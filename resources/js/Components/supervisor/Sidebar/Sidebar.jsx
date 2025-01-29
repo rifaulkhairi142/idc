@@ -4,7 +4,6 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { FaAngleRight } from "react-icons/fa6";
 
 import { AiOutlineDatabase } from "react-icons/ai";
-import { LuUsers2 } from "react-icons/lu";
 import { Link, router } from "@inertiajs/react";
 
 const Sidebar = ({ tabId }) => {
