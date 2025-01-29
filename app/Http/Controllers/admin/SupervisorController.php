@@ -102,7 +102,7 @@ class SupervisorController extends Controller
             'username' => $request->username,
             'role' => 'supervisor',
         ];
-
+        
         $user = User::create($data);
         if ($user) {
             // return redirect('/admin/daftarsupervisor')->with('message', ['success' => 'Supervisor Berhasil ditambahkan']);
