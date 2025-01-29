@@ -27,6 +27,7 @@ use App\Http\Controllers\OperatorKecamatan\OperatorKecamatanController;
 use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Student\TaskController;
 use App\Http\Controllers\Supervisor\SupervisorController;
 use App\Http\Controllers\testcontroller;
 use App\Models\LowonganPPL as ModelsLowonganPPL;
@@ -50,7 +51,8 @@ Route::middleware(['auth', 'opt-kecamatan'])->group(function () {
     Route::get('/operator-kecamatan/data/camat-keuchik/detail/{id}', [OperatorKecamatanController::class, 'camat_keuchik_detail']);
 });
 Route::middleware([])->group(function () {
-    Route::get('/mahasiswa/classroom/1/home', [HomeController::class, 'index']);
+    Route::get('/mahasiswa/classroom/1/task', [HomeController::class, 'index']);
+    Route::get('/mahasiswa/classroom/1/task/1/detail', [TaskController::class, 'detail']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {

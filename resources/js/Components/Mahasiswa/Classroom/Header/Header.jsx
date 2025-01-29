@@ -1,11 +1,14 @@
 import React from "react";
 import DropdownUser from "./DropdownUser";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import LogoIcon from "../../../../../../public/images/logo/Lambang_UIN_Ar-Raniry.png";
+import NavLink from "./NavLink";
 
 const Header = ({ sidebarOpen, setSidebarOpen }) => {
+    const { url, component } = usePage();
+    const { pathname, search } = new URL(url, window.location.origin);
     return (
-        <header className="sticky top-0 z-999 flex w-full bg-white  dark:bg-boxdark dark:drop-shadow-none">
+        <header className="sticky top-0 z-999 flex w-full bg-white  dark:bg-boxdark dark:drop-shadow-none flex-col">
             <div className="flex flex-grow items-center justify-between px-4 py-4 border md:px-6 2xl:px-11">
                 <div className="flex items-center gap-2 sm:gap-4 ">
                     {/* <!-- Hamburger Toggle BTN --> */}
@@ -99,6 +102,37 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     {/* <!-- User Area --> */}
                     <DropdownUser />
                     {/* <!-- User Area --> */}
+                </div>
+            </div>
+            <div className="bg-white border flex justify-center ">
+                <div
+                    className={`w-fit h-fit border-primary/0 border-b-2 hover:border-primary ${
+                        pathname.includes("task") && "!border-primary"
+                    }`}
+                >
+                    <NavLink
+                        href="/mahasiswa/classroom/1/task"
+                        className={`group relative flex h-10 items-center gap-2.5 text-[#3c4043] px-4 font-medium duration-100 ease-in-out hover:bg-black/5 border-primary ${
+                            (pathname === "/mahasiswa/classroom" ||
+                                pathname.includes("task")) &&
+                            "!bg-black/5 !text-primary"
+                        }`}
+                    >
+                        Tugas Kelas
+                    </NavLink>
+                </div>
+                <div className="w-fit h-fit border-primary/0 border-b-2 hover:border-primary">
+                    <NavLink
+                        href="/operator-kecamatan/data/camat-keuchik"
+                        className={`group relative flex h-10 items-center gap-2.5 text-[#3c4043] px-4 font-medium duration-100 ease-in-out hover:bg-primary/10 border-primary ${
+                            (pathname ===
+                                "/operator-kecamatan/data/camat-keuchik" ||
+                                pathname.includes("camat-keuchik")) &&
+                            "!text-white"
+                        }`}
+                    >
+                        Orang
+                    </NavLink>
                 </div>
             </div>
         </header>

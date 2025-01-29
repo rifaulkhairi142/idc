@@ -91,6 +91,7 @@ export default {
                 current: "currentColor",
                 transparent: "transparent",
                 white: "#FFFFFF",
+                textblack: "#3c4043",
                 black: {
                     ...colors.black,
                     DEFAULT: "#1C2434",
