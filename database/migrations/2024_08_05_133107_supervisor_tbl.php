@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('supervisor_tbl', function (Blueprint $table) {
             $table->id();
+            $table->string('nip')->unique();
             $table->string('name');
             $table->string('username');
             $table->string('no_hp_wa');
