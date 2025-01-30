@@ -55,3 +55,4 @@ Route::post('/admin/daftarsupervisor', [SupervisorController::class, 'save']);
 Route::get('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'show']);
 Route::put('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'update']);
 Route::delete('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'delete']);
+Route::post('/admin/importsupervisor', [SupervisorController::class, 'importsupervisor']);

@@ -27,8 +27,9 @@ class SupervisorController extends Controller
 
     public function importsupervisor(Request $request)
     {
-        Excel::import(new SupervisorImport, $request->file('daftarsupervisor'));
-        return redirect()->route('admin.daftarsupervisor');
+        $import = Excel::import(new SupervisorImport, $request->file('daftarsupervisor'));
+        // return redirect()->route('admin.daftarsupervisor');
+        return new SupervisorResource(true, 'Berhasil Import Data Supervisor', $import);
     }
 
     public function delete($id)
@@ -54,7 +55,7 @@ class SupervisorController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'username' => $request->username,
-            'role' => 'supervisor',
+            'role' => $request->role,
         ];
 
         // Hash password hanya jika diisi
@@ -100,7 +101,7 @@ class SupervisorController extends Controller
             'email' => $request->email,
             'password' => $request->password,
             'username' => $request->username,
-            'role' => 'supervisor',
+            'role' => $request->role,
         ];
         
         $user = User::create($data);
