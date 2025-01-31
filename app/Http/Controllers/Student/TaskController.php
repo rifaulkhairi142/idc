@@ -8,6 +8,10 @@ use Inertia\Inertia;
 
 class TaskController extends Controller
 {
+    public function index(){
+        
+    }
+
     public function detail(Request $request)
     {
         return Inertia::render('Mahasiswa/Classroom/DetailTask', ['base_url' => url('/')]);
