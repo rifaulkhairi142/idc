@@ -12,6 +12,7 @@ use App\Http\Controllers\OperatorKecamatan\OperatorKecamatanController;
 use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
 use App\Http\Controllers\Student\TaskController;
 use App\Http\Controllers\Student\CommentController;
+use App\Http\Controllers\Student\SubmissionController;
 use App\Models\AdminSekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,7 +66,11 @@ Route::delete('/student/classroom/task/{id}', [TaskController::class, 'deleteTas
 
 Route::get('/student/classroom/{id}/task', [TaskController::class, 'getTasksByClass']);
 Route::get('/student/classroom/{id_kelas}/task/{id_task}', [TaskController::class, 'getTaskDetails']);
-Route::get('/student/classroom/submission', [TaskController::class, 'getTaskSubmissions']);
+
+Route::get('/student/classroom/submission', [SubmissionController::class, 'getTaskSubmissions']);
+Route::post('/student/classroom/submission', [SubmissionController::class, 'createTaskSubmissions']);
+Route::put('/student/classroom/submission', [SubmissionController::class, 'editTaskSubmissions']);
+Route::delete('/student/classroom/submission', [SubmissionController::class, 'deleteTaskSubmissions']);
 
 Route::get('/student/classroom/publiccomment', [CommentController::class, 'getPublicComments']);
 Route::post('/student/classroom/publiccomment', [CommentController::class, 'createPublicComment']);
