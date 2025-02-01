@@ -1,6 +1,4 @@
-import Header from "@/Components/Mahasiswa/Classroom/Header/Header";
-import NavLink from "@/Components/Mahasiswa/Classroom/Header/NavLink";
-import Sidebar from "@/Components/Mahasiswa/Classroom/Sidebar/Sidebar";
+import Header from "@/Components/SupervisorKPM/Classroom/Header/Header";
 import { usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
@@ -35,9 +33,6 @@ const ClassroomLayout = ({ children }) => {
                         <div className="mx-auto  p-4 md:p-6 2xl:p-10 justify-center flex">
                             {children}
                         </div>
-                        {/* <footer className="flex bg-white p-5 justify-center items-center text-sm dark:bg-black dark:text-bodydark">
-                            Copyright © 2024 PT. EduTestMarket
-                        </footer> */}
                     </main>
                     {/* <!-- ===== Main Content End ===== --> */}
                 </div>

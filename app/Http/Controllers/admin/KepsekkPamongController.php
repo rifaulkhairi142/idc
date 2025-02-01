@@ -94,7 +94,7 @@ class KepsekkPamongController extends Controller
         }
         $query->selectRaw(
             'ROW_NUMBER() OVER (ORDER BY ampraham_ppl_tbl.status ASC, ampraham_ppl_tbl.id ASC) AS row_index,
-               ampraham_ppl_tbl.*,
+               ampraham_ppl_tbl.*, 
                 s_tbl.name as nama_sekolah,
                 us.name as nama_mahasiswa,
                 us.username as nim'
@@ -132,3 +132,5 @@ class KepsekkPamongController extends Controller
         }
     }
 }
+
+

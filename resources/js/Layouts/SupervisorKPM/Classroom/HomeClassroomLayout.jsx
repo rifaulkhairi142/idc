@@ -1,10 +1,10 @@
-import Header from "@/Components/Mahasiswa/Classroom/Header/Header";
 import NavLink from "@/Components/Mahasiswa/Classroom/Header/NavLink";
 import Sidebar from "@/Components/Mahasiswa/Classroom/Sidebar/Sidebar";
+import Header from "@/Components/SupervisorKPM/HomeClassroom/Header/Header";
 import { usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
-const ClassroomLayout = ({ children }) => {
+const HomeClassroomLayout = ({ children }) => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const { url, component } = usePage();
     const { pathname, search } = new URL(url, window.location.origin);
@@ -32,7 +32,7 @@ const ClassroomLayout = ({ children }) => {
 
                     {/* <!-- ===== Main Content Start ===== --> */}
                     <main>
-                        <div className="mx-auto  p-4 md:p-6 2xl:p-10 justify-center flex">
+                        <div className="mx-auto max-w-screen-lg p-4 md:p-6 2xl:p-10 justify-center flex">
                             {children}
                         </div>
                         {/* <footer className="flex bg-white p-5 justify-center items-center text-sm dark:bg-black dark:text-bodydark">
@@ -48,4 +48,4 @@ const ClassroomLayout = ({ children }) => {
     );
 };
 
-export default ClassroomLayout;
+export default HomeClassroomLayout;

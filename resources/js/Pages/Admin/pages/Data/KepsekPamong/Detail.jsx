@@ -18,6 +18,7 @@ import { NavigateNext } from "@mui/icons-material";
 import { useState } from "react";
 import axios from "axios";
 import { ThreeDot } from "react-loading-indicators";
+import AdminLayout from "@/Layouts/Admin/AdminLayout";
 
 const Detail = ({ data, base_url }) => {
     const [keterangan, setKeterangan] = useState(data?.keterangan);
@@ -49,14 +50,10 @@ const Detail = ({ data, base_url }) => {
     };
 
     return (
-        <section className="main flex">
+        <AdminLayout>
             <Head title={`${data?.name || "Kepsek & Pamong"}`} />
-            <div className="sidebarWrapper flex">
-                <Sidebar tabId={1} />
-            </div>
-            <div className="flex w-full ml-72 flex-col">
-                <Header></Header>
 
+            <div className="flex w-full flex-col">
                 <div className="space"></div>
                 {loading && (
                     <div className="absolute z-10 w-full h-full flex items-center justify-center bg-white/70">
@@ -279,7 +276,7 @@ const Detail = ({ data, base_url }) => {
                 </div>
                 <div className="h-46"></div>
             </div>
-        </section>
+        </AdminLayout>
     );
 };
 

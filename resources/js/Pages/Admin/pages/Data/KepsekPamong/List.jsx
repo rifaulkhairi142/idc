@@ -13,6 +13,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { ThreeDot } from "react-loading-indicators";
+import AdminLayout from "@/Layouts/Admin/AdminLayout";
 
 const List = ({ daftarprodi, flash, message, base_url }) => {
     const [openDialog, setOpenDialog] = useState(false);
@@ -222,15 +223,10 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
     };
 
     return (
-        <section className="main flex">
+        <AdminLayout className="main flex">
             <Head title="Kepsek & Pamong" />
-            <div className="sidebarWrapper flex">
-                <Sidebar tabId={1} />
-            </div>
-            <div className="flex w-full ml-72 flex-col">
-                <Header></Header>
 
-                <div className="space"></div>
+            <div className="flex w-full flex-col">
                 <div className="px-3">
                     <div className="flex w-full justify-start gap-x-2 py-2">
                         <Button
@@ -674,7 +670,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                     {flash.message && flash.message[notifyStatus]}
                 </Alert>
             </Snackbar>
-        </section>
+        </AdminLayout>
     );
 };
 

@@ -168,16 +168,7 @@ const Sidebar = ({ tabId }) => {
                                         List Pelamar
                                     </Button>
 
-                                    {/* <Button
-                                        className="w-full"
-                                        onClick={(e) =>
-                                            router.get(
-                                                "/admin/mahasiswakpm/list"
-                                            )
-                                        }
-                                    >
-                                        Data Mahasiswa KPM
-                                    </Button> */}
+                       
                                 </div>
                             </div>
                         </li>
