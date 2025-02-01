@@ -10,6 +10,8 @@ use App\Http\Controllers\LowonganKPMController;
 use App\Http\Controllers\LowonganPPLApiController;
 use App\Http\Controllers\OperatorKecamatan\OperatorKecamatanController;
 use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
+use App\Http\Controllers\Student\TaskController;
+use App\Http\Controllers\Student\CommentController;
 use App\Models\AdminSekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,3 +57,14 @@ Route::post('/admin/daftarsupervisor', [SupervisorController::class, 'save']);
 Route::get('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'show']);
 Route::put('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'update']);
 Route::delete('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'delete']);
+Route::post('/admin/importsupervisor', [SupervisorController::class, 'importsupervisor']);
+
+Route::get('/student/classroom/{id}/task', [TaskController::class, 'getTasksByClass']);
+Route::get('/student/classroom/{id_kelas}/task/{id_task}', [TaskController::class, 'getTaskDetails']);
+Route::get('/student/classroom/submission', [TaskController::class, 'getTaskSubmissions']);
+
+Route::get('/student/classroom/publiccomment', [CommentController::class, 'getPublicComments']);
+Route::post('/student/classroom/publiccomment', [CommentController::class, 'createPublicComment']);
+
+Route::get('/student/classroom/privatecomment', [CommentController::class, 'getPrivateComments']);
+Route::post('/student/classroom/privatecomment', [CommentController::class, 'createPrivateComment']);
