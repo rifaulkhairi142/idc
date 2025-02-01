@@ -12,6 +12,62 @@ use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
+    public function createTasksByClass(Request $request){ 
+        try {
+            $task = Task::create([
+                'name' => $request->name,
+                'tenggat' => $request->tenggat,
+                'tipe' => $request->tipe,
+            ]);
+            return new TaskResource(true, 'Tugas Berhasil dibuat!', $task);
+
+        } catch (\Exception $e) {
+            return new TaskResource(false, $e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function editTasksByClass(Request $request, $id){
+        try {
+
+            $task = [
+                'name' => $request->name,
+                'tenggat' => $request->tenggat,
+                'tipe' => $request->tipe,
+            ];
+
+            $data = Task::find($id);
+
+            if ($data) {
+                // Update data user
+                $data->update($task);
+        
+                // Response sukses
+                return new TaskResource(true, 'Tugas Berhasil diedit', $data);
+            }
+
+            return new TaskResource(true, 'Tugas Tidak Ditemukan!', null);
+
+        } catch (\Exception $e) {
+            return new TaskResource(false, $e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function deleteTasksByClass($id){
+        try {
+            $task = Task::find($id);
+            if ($task) {
+                $result = $task->delete();
+                if ($result) {
+                    return new TaskResource(true, 'Berhasil Menghapus Tugas', null);
+                }
+            }
+            return new TaskResource(false, 'Gagal Menghapus Tugas', null);
+
+        } catch (\Exception $e) {
+            return new TaskResource(false, $e->getMessage(), $e->getCode());
+        }
+    }
+
     public function getTasksByClass($id){
         
         try {
