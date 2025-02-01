@@ -9,6 +9,13 @@ class Comment extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'created_by',
+        'tipe',
+        'id_kelas',
+        'id_tugas'
+    ];
+
     public function user()
     {
         return $this->hasOne(User::class, 'username', 'created_by');
@@ -16,7 +23,7 @@ class Comment extends Model
 
     public function kelas()
     {
-        return $this->hasOne(LamaranKPM::class, 'id', 'id_kelas');
+        return $this->hasOne(TempatKPM::class, 'id', 'id_kelas');
     }
 
     public function tugas()

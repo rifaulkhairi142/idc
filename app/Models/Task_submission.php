@@ -9,6 +9,15 @@ class Task_submission extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'username_mahasiswa',
+        'id_kelas',
+        'id_tugas',
+        'link',
+        'status',
+        'score'
+    ];
+
     public function mahasiswa()
     {
         return $this->hasOne(User::class, 'username', 'username_mahasiswa');
@@ -16,7 +25,7 @@ class Task_submission extends Model
 
     public function kelas()
     {
-        return $this->hasOne(LamaranKPM::class, 'id', 'id_kelas');
+        return $this->hasOne(TempatKPM::class, 'id', 'id_kelas');
     }
 
     public function tugas()
