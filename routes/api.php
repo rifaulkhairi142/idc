@@ -13,6 +13,7 @@ use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
 use App\Http\Controllers\Student\TaskController;
 use App\Http\Controllers\Student\CommentController;
 use App\Http\Controllers\Student\SubmissionController;
+use App\Http\Controllers\Supervisor\SupervisorSubmissionController;
 use App\Models\AdminSekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -77,3 +78,5 @@ Route::post('/student/classroom/publiccomment', [CommentController::class, 'crea
 
 Route::get('/student/classroom/privatecomment', [CommentController::class, 'getPrivateComments']);
 Route::post('/student/classroom/privatecomment', [CommentController::class, 'createPrivateComment']);
+
+Route::put('/supervisor/classroom/score', [SupervisorSubmissionController::class, 'scoreTaskSubmissions']);

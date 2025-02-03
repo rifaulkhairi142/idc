@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task_submission;
+use App\Models\Task;
 use App\Http\Resources\SubmissionResource;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -24,10 +25,10 @@ class SubmissionController extends Controller
                 'id_kelas' => $request->id_kelas,
                 'id_tugas' => $request->id_tugas,
                 'status' => $request->status,
-                'score' => $request->score,
             ];
+            $task = Task::findOrFail($request->id_tugas);
 
-            if ($request->hasFile('link')) {
+            if ($task->tipe === 'dokumen') {
                 $file = $request->file('link');
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('public/submissions', $filename);
@@ -51,7 +52,7 @@ class SubmissionController extends Controller
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
             ], 500);
         }
-}
+    }
 
 
     public function editTaskSubmissions(Request $request){
@@ -70,10 +71,10 @@ class SubmissionController extends Controller
     
             // Update data submission
             $submission->status = $request->status ?? $submission->status;
-            $submission->score = $request->score ?? $submission->score;
     
-            // Jika ada file baru, ganti file lama
-            if ($request->hasFile('link')) {
+            $task = Task::findOrFail($request->id_tugas);
+
+            if ($task->tipe === 'dokumen') {
                 $file = $request->file('link');
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $path = $file->storeAs('public/submissions', $filename);
@@ -112,8 +113,9 @@ class SubmissionController extends Controller
                 return new SubmissionResource(false, 'Submission tidak ditemukan', 404);
             }
     
-            // Hapus file terkait jika ada
-            if ($submission->link) {
+            $task = Task::findOrFail($request->id_tugas);
+
+            if ($task->tipe === 'dokumen') {
                 Storage::delete($submission->link);
             }
     
@@ -164,4 +166,5 @@ class SubmissionController extends Controller
             return new SubmissionResource(false, $e->getMessage(), $e->getCode());
         }
     }
+
 }
