@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\SupervisorKPM;
 
 use App\Http\Controllers\Controller;
+use App\Models\TempatKPM;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ClassroomController extends Controller
 {
     public function index()
     {
-        return Inertia::render('SupervisorKPM/Classroom/Home');
+
+        $kelas = TempatKPM::where('username_supervisor', Auth::user()->username)->get();
+        return Inertia::render(
+            'SupervisorKPM/Classroom/Home',
+            ['kelas' => $kelas]
+        );
     }
 
     public function viewTask()

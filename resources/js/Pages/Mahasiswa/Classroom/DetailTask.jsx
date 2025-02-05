@@ -34,11 +34,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const DetailTask = ({ base_url, data, auth }) => {
+    9;
     const [dokumen, setDokumen] = useState(null);
     const [errors, setErrors] = useState({
         dokumen: null,
         link: null,
     });
+
     const [loading, setLoading] = useState(false);
     const [responseError, setResponseError] = useState(null);
     const [submissionData, setSubmissionData] = useState(null);
@@ -47,6 +49,7 @@ const DetailTask = ({ base_url, data, auth }) => {
     const [privateComment, setPrivateComment] = useState(null);
     const [publicCumment, setPublicComment] = useState(null);
     const [publiCommentData, setPublicCommentData] = useState([]);
+    const [privateCommentData, setPrivateCommentData] = useState([]);
 
     const handleDokumenChange = (e) => {
         const file = e.target.files[0];
@@ -88,6 +91,7 @@ const DetailTask = ({ base_url, data, auth }) => {
             setLoading(false);
             getTaskSubmission();
             getPublicComment();
+            getPrivateComment();
         }
     };
 
@@ -200,20 +204,43 @@ const DetailTask = ({ base_url, data, auth }) => {
                     },
                 }
             );
+            if (response.data.success === true) {
+                setPrivateCommentData(response.data.data);
+            }
         } catch (err) {
             setResponseError(err.response?.data?.message);
         } finally {
         }
     };
 
-    const makPrivateCommenct = async () => {
-        if (privateComment) {
+    const makePrivateCommenct = async () => {
+        if (privateComment !== null) {
             try {
+                console.log("test");
+
+                setLoading(true);
+
+                const formData = new FormData();
+                formData.append("tipe", "private");
+                formData.append("id_tugas", data?.id_tugas);
+                formData.append("id_kelas", data?.id_kelas);
+                formData.append("created_by", auth?.user?.username);
+                formData.append("message", privateComment);
+
                 const response = await axios.post(
-                    `${base_url}/api/student/classroom/privatecomment`
+                    `${base_url}/api/student/classroom/privatecomment`,
+                    formData
                 );
+                console.log("response ", response);
+                if (response.data.success === true) {
+                    getPrivateComment();
+                    setPrivateComment("");
+                }
             } catch (err) {
+                console.log(err);
                 setResponseError(err.response?.data?.message);
+            } finally {
+                setLoading(false);
             }
         }
     };
@@ -242,6 +269,36 @@ const DetailTask = ({ base_url, data, auth }) => {
         getTask();
     }, []);
 
+    const makePublicComment = async () => {
+        if (publicCumment !== null) {
+            try {
+                setLoading(true);
+
+                const formData = new FormData();
+                formData.append("tipe", "public");
+                formData.append("id_tugas", data?.id_tugas);
+                formData.append("id_kelas", data?.id_kelas);
+                formData.append("created_by", auth?.user?.username);
+                formData.append("message", publicCumment);
+
+                const response = await axios.post(
+                    `${base_url}/api/student/classroom/publiccomment`,
+                    formData
+                );
+                console.log("response ", response);
+                if (response.data.success === true) {
+                    getPublicComment();
+                    setPublicComment("");
+                }
+            } catch (err) {
+                console.log(err);
+                setResponseError(err.response?.data?.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     return (
         <ClassroomLayout>
             <Head title="Detail" />
@@ -253,6 +310,7 @@ const DetailTask = ({ base_url, data, auth }) => {
             <div className="flex w-full max-w-screen-xl">
                 <div className="flex w-full">
                     <div className="w-full  rounded-lg p-3 flex gap-x-8 bg-white ">
+                        {responseError}
                         <div className="bg-[#129eaf] w-fit h-fit p-3 rounded-full">
                             <svg
                                 focusable="false"
@@ -314,6 +372,10 @@ const DetailTask = ({ base_url, data, auth }) => {
                                     <div className="flex gap-x-1">
                                         <TextField
                                             size="small"
+                                            value={publicCumment}
+                                            onChange={(e) =>
+                                                setPublicComment(e.target.value)
+                                            }
                                             label="Add Comment"
                                             sx={{
                                                 width: "100%",
@@ -328,7 +390,10 @@ const DetailTask = ({ base_url, data, auth }) => {
                                                 },
                                             }}
                                         ></TextField>
-                                        <IconButton>
+                                        <IconButton
+                                            disabled={loading}
+                                            onClick={() => makePublicComment()}
+                                        >
                                             <SendSharp />
                                         </IconButton>
                                     </div>
@@ -457,11 +522,49 @@ const DetailTask = ({ base_url, data, auth }) => {
                                         <FiUser className="text-xl" />
                                         Private Comments
                                     </div>
-                                    <div></div>
+                                    <ul className="w-full h-full flex flex-col gap-2">
+                                        {privateCommentData.length > 0 ? (
+                                            privateCommentData.map((item) => (
+                                                <li
+                                                    key={item.id}
+                                                    className="flex flex-row text-textblack gap-2"
+                                                >
+                                                    <Avatar />
+                                                    <div>
+                                                        <h3 className="text-md">
+                                                            {item.created_by !==
+                                                            null
+                                                                ? item.receiver !==
+                                                                  null
+                                                                    ? item.receiver_by_name
+                                                                    : item.created_by_name
+                                                                : ""}
+                                                        </h3>
+                                                        <p className="text-sm text-wrap">
+                                                            {item.message}
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <div className="flex w-full h-full justify-center">
+                                                <img
+                                                    src={notFound}
+                                                    className="h-40"
+                                                ></img>
+                                            </div>
+                                        )}
+                                    </ul>
                                     <div className="flex gap-x-1">
                                         <TextField
                                             size="small"
                                             label="Add Comment"
+                                            value={privateComment}
+                                            onChange={(e) =>
+                                                setPrivateComment(
+                                                    e.target.value
+                                                )
+                                            }
                                             sx={{
                                                 width: "100%",
                                                 "& .MuiOutlinedInput-root.Mui-focused":
@@ -475,7 +578,12 @@ const DetailTask = ({ base_url, data, auth }) => {
                                                 },
                                             }}
                                         ></TextField>
-                                        <IconButton>
+                                        <IconButton
+                                            disabled={loading}
+                                            onClick={(e) =>
+                                                makePrivateCommenct()
+                                            }
+                                        >
                                             <SendSharp />
                                         </IconButton>
                                     </div>

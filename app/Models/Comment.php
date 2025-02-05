@@ -14,7 +14,8 @@ class Comment extends Model
         'tipe',
         'id_kelas',
         'id_tugas',
-        'receiver'
+        'receiver',
+        'message'
     ];
 
     public function user()

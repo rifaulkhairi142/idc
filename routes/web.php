@@ -61,6 +61,7 @@ Route::middleware([])->group(function () {
 
 Route::middleware([])->group(function () {
     Route::get('/supervisor-kpm/classroom/home', [ClassroomController::class, 'index']);
+    
     Route::get('/supervisor-kpm/classroom/1/task', [ClassroomController::class, 'viewTask']);
     Route::get('/supervisor-kpm/classroom/1/task/1/detail', [ClassroomController::class, 'detail']);
     Route::get('/supervisor-kpm/classroom/1/task/1/tugas-mahasiswa', [ClassroomController::class, 'tugasMahasiswa']);

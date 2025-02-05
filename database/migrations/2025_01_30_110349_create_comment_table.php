@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_kelas');
             $table->unsignedBigInteger('id_tugas');
             $table->string('receiver')->nullable();
+            $table->text('message')->nullable();
             $table->timestamps();
 
             $table->foreign('receiver')->references('username')->on('users')->onUpdate('cascade')->onDelete('cascade');
