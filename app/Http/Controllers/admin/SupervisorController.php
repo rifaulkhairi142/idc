@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SupervisorExport;
 use App\Http\Controllers\Controller;
 use App\Imports\SupervisorImport;
 use App\Models\User;
@@ -17,7 +18,7 @@ class SupervisorController extends Controller
     {
         try {
             $daftarsupervisor = User::select('users.id', 'users.name', 'users.username')
-                ->where('users.role', '=', 'supervisor')->paginate(10);
+                ->where('users.role', '=', 'supervisor_kpm')->paginate(10);
             // return Inertia::render('Admin/pages/Pengguna/Supervisor/ListSupervisor', ['daftarsupervisor' => $daftarsupervisor]);
             return new SupervisorResource(true, 'List Supervisor', $daftarsupervisor);
 
@@ -138,6 +139,15 @@ class SupervisorController extends Controller
             // return redirect('/admin/daftarsupervisor')->with('message', ['success' => 'Supervisor Berhasil ditambahkan']);
             return new SupervisorResource(false, 'Supervisor gagal ditambahkan', null);
 
+        } catch (\Exception $e) {
+            return new SupervisorResource(false, $e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function exportsupervisor()
+    {
+        try { 
+            return Excel::download(new SupervisorExport, 'Kredentials_Supervisor.xlsx');
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }

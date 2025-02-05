@@ -61,6 +61,7 @@ Route::get('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'show']
 Route::put('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'update']);
 Route::delete('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'delete']);
 Route::post('/admin/importsupervisor', [SupervisorController::class, 'importsupervisor']);
+Route::get('/admin/exportsupervisor', [SupervisorController::class, 'exportsupervisor']);
 
 Route::post('/student/classroom/task', [TaskController::class, 'createTasksByClass']);
 Route::put('/student/classroom/task/{id}', [TaskController::class, 'editTasksByClass']);

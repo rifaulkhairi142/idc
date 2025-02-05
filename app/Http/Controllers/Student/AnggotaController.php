@@ -20,7 +20,7 @@ class AnggotaController extends Controller
                 return new AnggotaResource(false, 'Kelas tidak ditemukan', 404);
             }
             $supervisor = User::where('username', $kelas->username_supervisor)
-            ->where('role', 'supervisor')->get();
+            ->where('role', 'supervisor_kpm')->get();
 
             $mahasiswa = LamaranKPM::with(['pelamar' => function ($query) {
                 $query->where('role', 'mahasiswa');
