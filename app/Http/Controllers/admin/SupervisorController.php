@@ -15,15 +15,22 @@ class SupervisorController extends Controller
 {
     public function index(Request $request)
     {
-        try {
-            $daftarsupervisor = User::select('users.id', 'users.name', 'users.username')
-                ->where('users.role', '=', 'supervisor')->paginate(10);
-            // return Inertia::render('Admin/pages/Pengguna/Supervisor/ListSupervisor', ['daftarsupervisor' => $daftarsupervisor]);
-            return new SupervisorResource(true, 'List Supervisor', $daftarsupervisor);
-
-        } catch (\Exception $e) {
-            return new SupervisorResource(false, $e->getMessage(), $e->getCode());
+        $query = User::where('role', 'supervisor_kpm');
+        if ($request->has('search_key') && !empty($request->search_key)) {
+            $query->where(function ($subQuery) use ($request) {
+                $subQuery->where('users.name', 'like', '%' . $request->search_key . '%');
+            });
         }
+        $query->selectRaw(
+            'ROW_NUMBER() OVER (ORDER BY users.id) AS row_index,
+                users.id,
+               users.name as name,
+               users.email,
+               users.username'
+        );
+        $data = $query->paginate(10);
+
+        return new SupervisorResource(true, 'List Supervisor', $data);
     }
     public function import()
     {
@@ -36,7 +43,6 @@ class SupervisorController extends Controller
             $import = Excel::import(new SupervisorImport, $request->file('daftarsupervisor'));
             // return redirect()->route('admin.daftarsupervisor');
             return new SupervisorResource(true, 'Berhasil Import Data Supervisor', $import);
-
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }
@@ -56,7 +62,6 @@ class SupervisorController extends Controller
             }
             // return redirect()->back()->with('message', ['error' => 'Gagal Menghapus Supervisor']);
             return new SupervisorResource(false, 'Gagal Menghapus Supervisor', null);
-
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }
@@ -64,20 +69,18 @@ class SupervisorController extends Controller
 
     public function edit($id) {}
 
-    public function update(Request $request, $id) {  
-        try { 
+    public function update(Request $request, $id)
+    {
+        try {
             // Data yang akan diupdate
             $data = [
                 'name' => $request->name,
                 'email' => $request->email,
                 'username' => $request->username,
-                'role' => $request->role,
+
             ];
 
-            // Hash password hanya jika diisi
-            if ($request->filled('password')) {
-                $data['password'] = bcrypt($request->password);
-            }
+
 
             // Cari user berdasarkan ID
             $user = User::find($id);
@@ -85,28 +88,26 @@ class SupervisorController extends Controller
             if ($user) {
                 // Update data user
                 $user->update($data);
-        
+
                 // Response sukses
                 return new SupervisorResource(true, 'Supervisor Berhasil diupdate', $user);
             }
-        
+
             // Jika user tidak ditemukan
             return new SupervisorResource(false, 'Supervisor tidak ditemukan', null);
-        
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }
     }
-    
+
     public function show($id)
     {
-        try { 
+        try {
             //find post by ID
             $user = User::find($id);
 
             //return single User as a resource
             return new SupervisorResource(true, 'Detail Data User!', $user);
-
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }
@@ -114,14 +115,14 @@ class SupervisorController extends Controller
 
     public function tambah(Request $request)
     {
-        
+
         // dd($request);
         return Inertia::render('Admin/pages/Pengguna/Supervisor/AddSupervisor');
     }
 
     public function save(Request $request)
     {
-        try { 
+        try {
             $data = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -129,7 +130,7 @@ class SupervisorController extends Controller
                 'username' => $request->username,
                 'role' => $request->role,
             ];
-            
+
             $user = User::create($data);
             if ($user) {
                 // return redirect('/admin/daftarsupervisor')->with('message', ['success' => 'Supervisor Berhasil ditambahkan']);
@@ -137,7 +138,6 @@ class SupervisorController extends Controller
             }
             // return redirect('/admin/daftarsupervisor')->with('message', ['success' => 'Supervisor Berhasil ditambahkan']);
             return new SupervisorResource(false, 'Supervisor gagal ditambahkan', null);
-
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }

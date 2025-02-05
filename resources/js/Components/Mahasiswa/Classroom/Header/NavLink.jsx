@@ -14,7 +14,7 @@ export default function NavLink({
         <Link
             {...props}
             className={`${className} ${
-                isActive || active ? "!text-white" : "text-bodydark2"
+                isActive || active ? "text-white" : "text-bodydark2"
             }`}
         >
             {children}

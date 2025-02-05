@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('tipe');
             $table->unsignedBigInteger('id_kelas');
             $table->unsignedBigInteger('id_tugas');
+            $table->string('receiver')->nullable();
             $table->timestamps();
 
+            $table->foreign('receiver')->references('username')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('created_by')->references('username')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_kelas')->references('id')->on('tempat_kpm_tbl')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_tugas')->references('id')->on('task')->onUpdate('cascade')->onDelete('cascade');

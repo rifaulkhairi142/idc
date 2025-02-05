@@ -13,7 +13,7 @@ class CommentController extends Controller
     public function createPublicComment(Request $request)
     {
         try {
-            
+
             $comment = Comment::create([
                 'id_kelas' => $request->id_kelas,
                 'id_tugas' => $request->id_tugas,
@@ -21,7 +21,6 @@ class CommentController extends Controller
                 'tipe' => 'public',
             ]);
             return new CommentResource(true, 'Comment Public Berhasil dibuat!', $comment);
-
         } catch (\Exception $e) {
             return new CommentResource(false, $e->getMessage(), $e->getCode());
         }
@@ -37,7 +36,6 @@ class CommentController extends Controller
                 ->when($request->id_tugas, fn($q) => $q->where('id_tugas', $request->id_tugas))
                 ->get();
             return new CommentResource(true, 'List Comment!', $comments);
-
         } catch (\Exception $e) {
             return new CommentResource(false, $e->getMessage(), $e->getCode());
         }
@@ -52,10 +50,10 @@ class CommentController extends Controller
                 'id_kelas' => $request->id_kelas,
                 'id_tugas' => $request->id_tugas,
                 'created_by' => $request->created_by,
+                'receiver' => $request->receiver,
                 'tipe' => 'private',
             ]);
             return new CommentResource(true, 'Comment Private Berhasil dibuat!', $comment);
-
         } catch (\Exception $e) {
             return new CommentResource(false, $e->getMessage(), $e->getCode());
         }
@@ -70,12 +68,11 @@ class CommentController extends Controller
                 ->when($request->id_kelas, fn($q) => $q->where('id_kelas', $request->id_kelas))
                 ->when($request->id_tugas, fn($q) => $q->where('id_tugas', $request->id_tugas))
                 ->when($request->created_by, fn($q) => $q->where('created_by', $request->created_by))
+                ->orWhere('receiver', $request->created_by)
                 ->get();
             return new CommentResource(true, 'List Comment!', $comments);
-
         } catch (\Exception $e) {
             return new CommentResource(false, $e->getMessage(), $e->getCode());
         }
     }
-
 }

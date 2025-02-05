@@ -63,9 +63,14 @@ const Footer = ({ currentTab }) => {
                 >
                     <BottomNavigationAction
                         label="KPM"
-                        onClick={() => router.visit("/")}
+                        onClick={() => router.visit("/classroom")}
                         icon={<MdHolidayVillage />}
                     />
+                    {/* <BottomNavigationAction
+                        label="KPM"
+                        onClick={() => router.visit("/")}
+                        icon={<MdHolidayVillage />}
+                    /> */}
                     <BottomNavigationAction
                         label="PPL"
                         onClick={() => router.visit("/lowonganppl")}

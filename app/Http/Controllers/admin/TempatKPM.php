@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\User;
 use App\Models\LamaranKPM;
 use App\Models\LamaranPPL;
 use App\Models\TempatKPM as ModelsTempatKPM;
+use App\Models\User as ModelsUser;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +32,8 @@ class TempatKPM extends Controller
                 'p_tbl.name as nama_prodi',
                 DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = "accepted" AND l_kpm.id_tempat_kpm = t_kpm.id) AS accepted_pelamar_count'),
                 DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_td ON l_kpm.username_mahasiswa = m_td.nim WHERE l_kpm.status = "accepted" AND m_td.jk = "Pria"  AND l_kpm.id_tempat_kpm = t_kpm.id ) AS jumlah_pria'),
-                DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_td ON l_kpm.username_mahasiswa = m_td.nim WHERE l_kpm.status = "accepted" AND m_td.jk = "Wanita"  AND l_kpm.id_tempat_kpm = t_kpm.id ) AS jumlah_wanita')
+                DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_td ON l_kpm.username_mahasiswa = m_td.nim WHERE l_kpm.status = "accepted" AND m_td.jk = "Wanita"  AND l_kpm.id_tempat_kpm = t_kpm.id ) AS jumlah_wanita'),
+
 
 
 
@@ -57,7 +60,8 @@ class TempatKPM extends Controller
             '),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = "accepted" AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id) AS accepted_pelamar_count'),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Pria"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_pria'),
-            DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Wanita"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_wanita')
+            DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Wanita"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_wanita'),
+            DB::raw('(SELECT users.name FROM USERS WHERE tempat_kpm_tbl.username_supervisor = USERS.username) as nama_supervisor')
 
         )->get();
         $tempat_kpm->transform(function ($item) {
@@ -161,8 +165,10 @@ class TempatKPM extends Controller
     public function edit($id)
     {
         $tempat_kpm = ModelsTempatKPM::find($id);
+        $supervisor = ModelsUser::where('role', 'supervisor_kpm')->get();
         return Inertia::render('Admin/pages/KPM/EditTempatKPM', [
             'tempat_kpm' => $tempat_kpm,
+            'supervisor' => $supervisor
         ]);
     }
     public function update(Request $request, $id)
@@ -173,7 +179,8 @@ class TempatKPM extends Controller
             'regency' => 'required',
             'sub_district' => 'required',
             'village' => 'required',
-            'qouta' => 'required|numeric'
+            'qouta' => 'required|numeric',
+            'username_supervisor' => 'required',
 
         ]);
         $tempat_kpm = ModelsTempatKPM::find($id);

@@ -25,7 +25,7 @@ const Sidebar = ({ tabId }) => {
                         </span>
                     </Link>
                 </div>
-                <div className="sidebarTabs px-3 mt-4">
+                <div className="sidebarTabs px-3 mt-4 h-screen overflow-y-scroll">
                     <ul className="flex gap-4 flex-col">
                         <li>
                             <Link href="/admin/dashboard">
@@ -167,8 +167,6 @@ const Sidebar = ({ tabId }) => {
                                     >
                                         List Pelamar
                                     </Button>
-
-                       
                                 </div>
                             </div>
                         </li>
@@ -325,6 +323,69 @@ const Sidebar = ({ tabId }) => {
                                         }}
                                     >
                                         Admin Kecamatan
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => {
+                                            router.visit(
+                                                "/admin/users/supervisor-kpm"
+                                            );
+                                        }}
+                                    >
+                                        Supervisor KPM
+                                    </Button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <Button
+                                className={`w-full flex items-center justify-center ${
+                                    activeTab === 5 ? "active" : ""
+                                }`}
+                                onClick={() => isOpenSubmenu(5)}
+                            >
+                                <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md">
+                                    <LuUsers />
+                                </span>
+                                Classroom KPM
+                                <span
+                                    className={`arrow ml-auto w-[25px]  h-[25px] flex items-center justify-center ${
+                                        activeTab === 5 &&
+                                        isToggleSubmenu === true
+                                            ? "rotate"
+                                            : ""
+                                    }`}
+                                >
+                                    <FaAngleRight />
+                                </span>
+                            </Button>
+                            <div
+                                className={`submenuWrapper ${
+                                    activeTab === 5 && isToggleSubmenu === true
+                                        ? "colapse"
+                                        : "colapsed"
+                                }`}
+                            >
+                                <div className="submenu">
+                                    <Button
+                                        className="w-full"
+                                        onClick={() =>
+                                            router.visit(
+                                                "/admin/classroom-kpm/tugas"
+                                            )
+                                        }
+                                    >
+                                        Tugas
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => {
+                                            // router.visit(
+                                            //     "/admin/daftarsupervisor"
+                                            // );
+                                        }}
+                                    >
+                                        Nilai
                                     </Button>
                                 </div>
                             </div>

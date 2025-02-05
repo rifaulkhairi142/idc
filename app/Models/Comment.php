@@ -13,7 +13,8 @@ class Comment extends Model
         'created_by',
         'tipe',
         'id_kelas',
-        'id_tugas'
+        'id_tugas',
+        'receiver'
     ];
 
     public function user()

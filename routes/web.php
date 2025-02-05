@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminKecamatanController;
 use App\Http\Controllers\Admin\AdminSekolahController;
 use App\Http\Controllers\Admin\CamatKeuchikController;
+use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\KepsekkPamongController;
 use App\Http\Controllers\Admin\LowonganPPLController;
 use App\Http\Controllers\Admin\MahasiswaKPMController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\MahasiswaPPLContoller;
 use App\Http\Controllers\Admin\MahsiswaController;
 use App\Http\Controllers\Admin\ProdiController;
 use App\Http\Controllers\Admin\SupervisorController as AdminSupervisorController;
+use App\Http\Controllers\Admin\SupervisorKPMController;
 use App\Http\Controllers\Admin\TempatKPM;
 use App\Http\Controllers\Admin\TempatPPLController;
 use App\Http\Controllers\DashboardController;
@@ -27,6 +29,7 @@ use App\Http\Controllers\OperatorKecamatan\OperatorKecamatanController;
 use App\Http\Controllers\OperatorSekolah\OpratorSekolahController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\Student\ClassroomController as StudentClassroomController;
 use App\Http\Controllers\Student\TaskController;
 use App\Http\Controllers\Supervisor\SupervisorController;
 use App\Http\Controllers\SupervisorKPM\ClassroomController;
@@ -70,6 +73,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/data/kepsek-pamong/detail/{id}', [KepsekkPamongController::class, 'detail']);
     Route::get('/admin/camat-keuchik/detail/{id}', [CamatKeuchikController::class, 'detail']);
 
+    // Classroom KPM
+    Route::get('/admin/classroom-kpm/tugas', [AdminClassroomController::class, 'tugas']);
+    Route::get('/admin/classroom-kpm/tugas/add', [AdminClassroomController::class, 'tugas_add']);
+    Route::get('/admin/classroom-kpm/tugas/detail/{id}', [AdminClassroomController::class, 'tugas_edit']);
+
+    // Data
     Route::get('/admin/daftarprodi', [ProdiController::class, 'show'])->name("admin.daftarprodi");
     Route::get('/admin/prodi/add', [ProdiController::class, 'add'])->name('admin.prodi.add');
     Route::get('/admin/prodi/import', [ProdiController::class, 'import'])->name("admin.prodi.import");
@@ -153,6 +162,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::get('/admin/admin-sekolah/list', [AdminSekolahController::class, 'index']);
     Route::get('/admin/admin-kecamatan/list', [AdminKecamatanController::class, 'index']);
+
+
+    // Pengguna
+    Route::get('/admin/users/supervisor-kpm', [SupervisorKPMController::class, 'list']);
+    Route::get('/admin/users/supervisor-kpm/add', [SupervisorKPMController::class, 'add']);
+    Route::get('/admin/users/supervisor-kpm/edit/{id}', [SupervisorKPMController::class, 'edit']);
 });
 
 
@@ -166,6 +181,8 @@ Route::middleware(['auth', 'supervisor'])->group(function () {
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/', [HomeControler::class, 'index'])->name("frontpage")->middleware(['profil', 'open_kpm']);
+    Route::get('/classroom', [StudentClassroomController::class, 'home']);
+
     Route::get('/lowongankpm/detail/{id}', [LowonganKPM::class, 'index'])->name("lowongankpm.detail")->middleware(['profil']);
     Route::post('/lowongankpm/lamar', [LowonganKPM::class, 'lamar'])->name('lowongankpm.lamar')->middleware(['profil']);
     Route::get('/riwayat', [RiwayatLamaran::class, 'index'])->name('riwayat')->middleware(['profil']);
@@ -175,6 +192,9 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/profil', [MahasiswaProfilController::class, 'index'])->name("profil");
     Route::get('/nilai', [NilaiController::class, 'index'])->name("nilai")->middleware(['profil']);
     Route::post('/profil/save', [MahasiswaProfilController::class, 'save'])->name('profil.save')->middleware(['save_profil']);
+
+    Route::get('/student/classroom/{id}/task', [StudentClassroomController::class, 'tasks']);
+    Route::get('/student/classroom/{id_kelas}/task/detail/{id_tugas}', [StudentClassroomController::class, 'detail_tugas']);
 });
 
 

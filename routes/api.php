@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\SupervisorController;
+use App\Http\Controllers\Admin\SupervisorKPMController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -55,21 +56,25 @@ Route::post('/admin/data/camat-keuchik/update-status/{id}', [CamatKeuchikControl
 
 Route::get('/admin/daftarsupervisor', [SupervisorController::class, 'index']);
 Route::post('/admin/daftarsupervisor', [SupervisorController::class, 'save']);
-Route::get('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'show']);
-Route::put('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'update']);
-Route::delete('/admin/daftarsupervisor/{id}', [SupervisorController::class, 'delete']);
+Route::get('/admin/users/supervisor-kpm/{id}', [SupervisorController::class, 'show']);
+Route::post('/admin/users/supervisor-kpm/update/{id}', [SupervisorController::class, 'update']);
+Route::delete('/admin/users/supervisor-kpm/{id}', [SupervisorController::class, 'delete']);
 Route::post('/admin/importsupervisor', [SupervisorController::class, 'importsupervisor']);
 
+
 Route::post('/student/classroom/task', [TaskController::class, 'createTasksByClass']);
-Route::put('/student/classroom/task/{id}', [TaskController::class, 'editTasksByClass']);
-Route::delete('/student/classroom/task/{id}', [TaskController::class, 'deleteTasksByClass']);
+Route::post('/student/classroom/task/{id}', [TaskController::class, 'editTasksByClass']);
+Route::delete('/admin/classroom-kpm/task/{id}', [TaskController::class, 'deleteTasksByClass']);
+Route::get('/admin/classroom-kpm/task/{id}', [TaskController::class, 'getTask']);
+
+Route::get('/admin/classroom-kpm/query', [TaskController::class, 'queryTasks']);
 
 Route::get('/student/classroom/{id}/task', [TaskController::class, 'getTasksByClass']);
 Route::get('/student/classroom/{id_kelas}/task/{id_task}', [TaskController::class, 'getTaskDetails']);
 
 Route::get('/student/classroom/submission', [SubmissionController::class, 'getTaskSubmissions']);
 Route::post('/student/classroom/submission', [SubmissionController::class, 'createTaskSubmissions']);
-Route::put('/student/classroom/submission', [SubmissionController::class, 'editTaskSubmissions']);
+Route::post('/student/classroom/submission/update', [SubmissionController::class, 'editTaskSubmissions']);
 Route::delete('/student/classroom/submission', [SubmissionController::class, 'deleteTaskSubmissions']);
 
 Route::get('/student/classroom/publiccomment', [CommentController::class, 'getPublicComments']);
@@ -77,3 +82,5 @@ Route::post('/student/classroom/publiccomment', [CommentController::class, 'crea
 
 Route::get('/student/classroom/privatecomment', [CommentController::class, 'getPrivateComments']);
 Route::post('/student/classroom/privatecomment', [CommentController::class, 'createPrivateComment']);
+
+Route::get('/admin/users/supervisor-kpm', [SupervisorKPMController::class, 'all']);

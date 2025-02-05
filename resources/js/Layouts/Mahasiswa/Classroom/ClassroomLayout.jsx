@@ -32,7 +32,7 @@ const ClassroomLayout = ({ children }) => {
 
                     {/* <!-- ===== Main Content Start ===== --> */}
                     <main>
-                        <div className="mx-auto  p-4 md:p-6 2xl:p-10 justify-center flex">
+                        <div className="mx-auto max-w-screen-lg p-4 md:p-6 2xl:p-10 justify-center flex">
                             {children}
                         </div>
                         {/* <footer className="flex bg-white p-5 justify-center items-center text-sm dark:bg-black dark:text-bodydark">

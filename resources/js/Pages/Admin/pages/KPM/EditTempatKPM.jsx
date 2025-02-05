@@ -14,7 +14,7 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import { NavigateNext } from "@mui/icons-material";
 import InputError from "@/Components/InputError";
 
-export const EditTempatKPM = ({ tempat_kpm }) => {
+export const EditTempatKPM = ({ tempat_kpm, supervisor }) => {
     const [name, setName] = useState(tempat_kpm?.name || null);
     const [description, setDescription] = useState(
         tempat_kpm?.description || null
@@ -64,6 +64,14 @@ export const EditTempatKPM = ({ tempat_kpm }) => {
         return null;
     });
 
+    const [usernameSupervisor, setUsernameSupervisor] = useState(
+        tempat_kpm.username_supervisor
+            ? supervisor.find(
+                  (itm) => itm.username === tempat_kpm.username_supervisor
+              )
+            : null
+    );
+
     const { data, setData, post, processing, errors } = useForm({
         name: name,
         regency: regency?.kode,
@@ -71,7 +79,7 @@ export const EditTempatKPM = ({ tempat_kpm }) => {
         sub_district: subDistrict?.kode,
         qouta: qouta,
         village: village?.kode,
-        username_supervisor: null,
+        username_supervisor: usernameSupervisor?.username,
     });
 
     const handleNameChange = (e) => {
@@ -219,6 +227,30 @@ export const EditTempatKPM = ({ tempat_kpm }) => {
                             ></Autocomplete>
                             {errors.village && (
                                 <InputError message={errors.village} />
+                            )}
+                        </div>
+                        <div className="flex flex-col w-full">
+                            <Autocomplete
+                                id="supervisor"
+                                sx={{ width: "100%" }}
+                                value={usernameSupervisor}
+                                options={supervisor}
+                                getOptionLabel={(option) => option.name}
+                                onChange={(e, value) => {
+                                    setUsernameSupervisor(value);
+                                    setData(
+                                        "username_supervisor",
+                                        value.username
+                                    );
+                                }}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Supervisor" />
+                                )}
+                            ></Autocomplete>
+                            {errors.username_supervisor && (
+                                <InputError
+                                    message={errors.username_supervisor}
+                                />
                             )}
                         </div>
                     </div>

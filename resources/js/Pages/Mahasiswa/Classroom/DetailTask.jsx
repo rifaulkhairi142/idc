@@ -1,7 +1,13 @@
 import InputError from "@/Components/InputError";
 import ClassroomLayout from "@/Layouts/Mahasiswa/Classroom/ClassroomLayout";
 import styled from "@emotion/styled";
-import { Button, IconButton, TextField } from "@mui/material";
+import {
+    Avatar,
+    Button,
+    IconButton,
+    TextField,
+    useStepContext,
+} from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -11,6 +17,9 @@ import { FiUser } from "react-icons/fi";
 import { SendOutlined, SendSharp } from "@mui/icons-material";
 import { ThreeDot } from "react-loading-indicators";
 import { Head } from "@inertiajs/react";
+import axios from "axios";
+import { useEffect } from "react";
+import notFound from "../../../../../public/images/nodata-found 1.png";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -24,14 +33,20 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-const DetailTask = () => {
+const DetailTask = ({ base_url, data, auth }) => {
     const [dokumen, setDokumen] = useState(null);
     const [errors, setErrors] = useState({
-        dukumen: null,
+        dokumen: null,
         link: null,
     });
     const [loading, setLoading] = useState(false);
-    const [tipeTugas, setTipeTugas] = useState("file");
+    const [responseError, setResponseError] = useState(null);
+    const [submissionData, setSubmissionData] = useState(null);
+    const [taskData, setTaskData] = useState(null);
+    const [link, setLink] = useState(null);
+    const [privateComment, setPrivateComment] = useState(null);
+    const [publicCumment, setPublicComment] = useState(null);
+    const [publiCommentData, setPublicCommentData] = useState([]);
 
     const handleDokumenChange = (e) => {
         const file = e.target.files[0];
@@ -52,7 +67,7 @@ const DetailTask = () => {
 
                 return;
             }
-            setDokumen(file);
+            setLink(file);
             // setPayload({ ...payload, dokumen: file });
             setErrors({
                 ...errors,
@@ -60,6 +75,173 @@ const DetailTask = () => {
             });
         }
     };
+
+    const getTask = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                `${base_url}/api/admin/classroom-kpm/task/${data?.id_tugas}`
+            );
+            setTaskData(response.data.data);
+        } catch (err) {
+        } finally {
+            setLoading(false);
+            getTaskSubmission();
+            getPublicComment();
+        }
+    };
+
+    const getTaskSubmission = async () => {
+        setLoading(false);
+        try {
+            const formData = new FormData();
+            formData.append("id_kelas", data?.id_kelas);
+            formData.append("id_tugas", data?.id_tugas);
+            formData.append("username_mahasiswa", auth.user?.username);
+
+            const response = await axios.get(
+                `${base_url}/api/student/classroom/submission`,
+                {
+                    params: {
+                        id_kelas: data?.id_kelas,
+                        id_tugas: data?.id_tugas,
+                        username_mahasiswa: auth.user?.username,
+                    },
+                }
+            );
+            setSubmissionData(response.data.data);
+        } catch (err) {
+            setResponseError(err.response?.data?.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const updateTaskSubmission = async () => {
+        if (link) {
+            setLoading(true);
+
+            try {
+                const formData = new FormData();
+                formData.append("id_kelas", data?.id_kelas);
+                formData.append("id_tugas", data?.id_tugas);
+                formData.append("status", "diserahkan");
+                formData.append("link", link);
+                formData.append("username_mahasiswa", auth?.user?.username);
+                const response = await axios.post(
+                    `${base_url}/api/student/classroom/submission/update`,
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+                if (response.data.success === true) {
+                    getTaskSubmission();
+                }
+            } catch (err) {
+                setResponseError(err.response?.data?.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        {
+            setErrors({
+                dokumen: "Dokumen wajib diupload",
+                link: "Link wajib diisi",
+            });
+        }
+    };
+
+    const makeSubmission = async () => {
+        if (link) {
+            setLoading(true);
+
+            try {
+                const formData = new FormData();
+                formData.append("id_kelas", data?.id_kelas);
+                formData.append("id_tugas", data?.id_tugas);
+                formData.append("status", "diserahkan");
+                formData.append("link", link);
+                formData.append("username_mahasiswa", auth?.user?.username);
+                const response = await axios.post(
+                    `${base_url}/api/student/classroom/submission`,
+                    formData,
+                    {
+                        headers: { "Content-Type": "multipart/form-data" },
+                    }
+                );
+                if (response.data.success === true) {
+                    getTaskSubmission();
+                    getPrivateComment();
+                }
+            } catch (err) {
+                setResponseError(err.response?.data?.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        {
+            setErrors({
+                dokumen: "Dokumen wajib diupload",
+                link: "Link wajib diisi",
+            });
+        }
+    };
+
+    const getPrivateComment = async () => {
+        try {
+            const response = await axios.get(
+                `${base_url}/api/student/classroom/privatecomment`,
+                {
+                    params: {
+                        id_kelas: data.id_kelas,
+                        id_tugas: data.id_tugas,
+                        created_by: auth?.user?.username,
+                    },
+                }
+            );
+        } catch (err) {
+            setResponseError(err.response?.data?.message);
+        } finally {
+        }
+    };
+
+    const makPrivateCommenct = async () => {
+        if (privateComment) {
+            try {
+                const response = await axios.post(
+                    `${base_url}/api/student/classroom/privatecomment`
+                );
+            } catch (err) {
+                setResponseError(err.response?.data?.message);
+            }
+        }
+    };
+
+    const getPublicComment = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                `${base_url}/api/student/classroom/publiccomment`,
+                {
+                    params: {
+                        id_kelas: data.id_kelas,
+                        id_tugas: data.id_tugas,
+                    },
+                }
+            );
+            setPublicCommentData(response.data.data);
+        } catch (err) {
+            setResponseError(err.response?.data?.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getTask();
+    }, []);
+
     return (
         <ClassroomLayout>
             <Head title="Detail" />
@@ -86,7 +268,7 @@ const DetailTask = () => {
                         <div className="flex flex-col lg:flex-row w-full lg:cols gap-3">
                             <div className="flex w-full flex-col">
                                 <h3 className="font-bold text-[#3c4043]">
-                                    Artikel
+                                    {taskData?.name}
                                 </h3>
                                 <div className="flex justify-between">
                                     <p className=" text-[#3c4043]">
@@ -94,16 +276,41 @@ const DetailTask = () => {
                                     </p>
 
                                     <p className=" text-[#3c4043]">
-                                        Tenggat 10-02-2025
+                                        {`Tenggat ${taskData?.tenggat}`}
                                     </p>
                                 </div>
                                 <hr className="mt-4" />
-                                <div className="flex flex-col gap-2 mt-3">
+                                <div className="flex flex-col gap-3 mt-3">
                                     <div className="flex gap-x-2 items-center text-textblack">
                                         <LuUsers className="text-xl" />
                                         Class Comments
                                     </div>
-                                    <div></div>
+                                    <ul className="w-full h-full flex flex-col gap-2">
+                                        {publiCommentData.length > 0 ? (
+                                            publiCommentData.map((item) => (
+                                                <li className="flex flex-row text-textblack gap-2">
+                                                    <Avatar />
+                                                    <div>
+                                                        <h3 className="text-md ">
+                                                            {
+                                                                item.created_by_name
+                                                            }
+                                                        </h3>
+                                                        <p className="text-sm text-wrap">
+                                                            {item.message}
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <div className="flex w-full h-full justify-center">
+                                                <img
+                                                    src={notFound}
+                                                    className="h-40"
+                                                ></img>
+                                            </div>
+                                        )}
+                                    </ul>
                                     <div className="flex gap-x-1">
                                         <TextField
                                             size="small"
@@ -131,16 +338,31 @@ const DetailTask = () => {
                                 <div className="flex p-3 flex-col gap-y-5 w-full rounded-lg border shadow-md">
                                     <ul className=" flex justify-between">
                                         <li className="text-lg">Your Work</li>
-                                        <li>Ditugaskan</li>
+                                        <li>{submissionData?.status}</li>
                                     </ul>
-                                    {tipeTugas === "file" && (
+                                    {taskData?.tipe === "File" && (
                                         <div className="flex flex-col gap-y-2">
-                                            {dokumen && (
+                                            {link && (
                                                 <a
                                                     href="#"
                                                     className="font-normal flex items-center gap-x-2 border w-full  h-10 px-3 py-1 rounded-md cursor-pointer"
                                                 >
-                                                    {dokumen.name}
+                                                    {link.name}
+                                                    <RiAttachment2 className="text-lg" />
+                                                </a>
+                                            )}
+                                            {submissionData?.link && (
+                                                <a
+                                                    target="_blank"
+                                                    href={`${base_url}/storage/${submissionData.link.replace(
+                                                        /^public\//,
+                                                        ""
+                                                    )}`}
+                                                    className="font-normal text-wrap flex items-center gap-x-2 border w-full  h-10 px-3 py-1 rounded-md cursor-pointer"
+                                                >
+                                                    {submissionData?.link
+                                                        .split("/")
+                                                        .pop()}
                                                     <RiAttachment2 className="text-lg" />
                                                 </a>
                                             )}
@@ -173,12 +395,16 @@ const DetailTask = () => {
                                             )}
                                         </div>
                                     )}
-                                    {tipeTugas === "link" && (
+                                    {taskData?.tipe === "Link" && (
                                         <div className="flex flex-col gap-y-2">
                                             <TextField
                                                 size="small"
                                                 type="url"
                                                 label="Link Tugas"
+                                                value={link}
+                                                onChange={(e) =>
+                                                    setLink(e.target.value)
+                                                }
                                                 placeholder="Paste Link"
                                                 sx={{
                                                     "& .MuiOutlinedInput-root.Mui-focused":
@@ -210,6 +436,17 @@ const DetailTask = () => {
                                                 textTransform: "capitalize",
                                             }}
                                             disableElevation
+                                            onClick={(e) => {
+                                                if (
+                                                    getTaskSubmission.status ===
+                                                    "ditugaskan"
+                                                ) {
+                                                    makeSubmission(e);
+                                                } else {
+                                                    updateTaskSubmission(e);
+                                                }
+                                            }}
+                                            disabled={link === null}
                                         >
                                             Serahkan
                                         </Button>

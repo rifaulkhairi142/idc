@@ -81,7 +81,7 @@ const TempatKPM = ({ tempat_kpm }) => {
             },
         },
 
-        { name: "username_supervisor", label: "Nama Supervisor" },
+        { name: "nama_supervisor", label: "Nama Supervisor" },
         {
             name: "id",
             label: "Action",

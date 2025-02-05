@@ -4,9 +4,10 @@ import { Link, usePage } from "@inertiajs/react";
 import LogoIcon from "../../../../../../public/images/logo/Lambang_UIN_Ar-Raniry.png";
 import NavLink from "./NavLink";
 
-const Header = ({ sidebarOpen, setSidebarOpen }) => {
+const Header = ({ sidebarOpen, setSidebarOpen, auth }) => {
     const { url, component } = usePage();
     const { pathname, search } = new URL(url, window.location.origin);
+    const user = usePage().props.auth;
     return (
         <header className="sticky top-0 z-999 flex w-full bg-white  dark:bg-boxdark dark:drop-shadow-none flex-col">
             <div className="flex flex-grow items-center justify-between px-4 py-4 border md:px-6 2xl:px-11">
@@ -54,49 +55,10 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     </button>
                     {/* <!-- Hamburger Toggle BTN --> */}
 
-                    <Link className="block flex-shrink-0" href="#">
+                    <Link className="block flex-shrink-0" href="/classroom">
                         <img className="w-18" src={LogoIcon} alt="Logo" />
                     </Link>
                 </div>
-
-                {/* <div className="hidden sm:block">
-                    <form
-                        action="https://formbold.com/s/unique_form_id"
-                        method="POST"
-                    >
-                        <div className="relative">
-                            <button className="absolute left-0 top-1/2 -translate-y-1/2">
-                                <svg
-                                    className="fill-body hover:fill-primary dark:fill-bodydark dark:hover:fill-primary"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 20 20"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M9.16666 3.33332C5.945 3.33332 3.33332 5.945 3.33332 9.16666C3.33332 12.3883 5.945 15 9.16666 15C12.3883 15 15 12.3883 15 9.16666C15 5.945 12.3883 3.33332 9.16666 3.33332ZM1.66666 9.16666C1.66666 5.02452 5.02452 1.66666 9.16666 1.66666C13.3088 1.66666 16.6667 5.02452 16.6667 9.16666C16.6667 13.3088 13.3088 16.6667 9.16666 16.6667C5.02452 16.6667 1.66666 13.3088 1.66666 9.16666Z"
-                                        fill=""
-                                    />
-                                    <path
-                                        fillRule="evenodd"
-                                        clipRule="evenodd"
-                                        d="M13.2857 13.2857C13.6112 12.9603 14.1388 12.9603 14.4642 13.2857L18.0892 16.9107C18.4147 17.2362 18.4147 17.7638 18.0892 18.0892C17.7638 18.4147 17.2362 18.4147 16.9107 18.0892L13.2857 14.4642C12.9603 14.1388 12.9603 13.6112 13.2857 13.2857Z"
-                                        fill=""
-                                    />
-                                </svg>
-                            </button>
-
-                            <input
-                                type="text"
-                                placeholder="Type to search..."
-                                className="w-full bg-transparent pl-9 pr-4 text-black dark:text-white xl:w-125 border-0 focus:outline-none focus:ring-0 focus:border-transparent hover:outline-none hover:ring-0"
-                            />
-                        </div>
-                    </form>
-                </div> */}
 
                 <div className="flex items-center gap-3 2xsm:gap-7">
                     {/* <!-- User Area --> */}
@@ -106,12 +68,10 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
             <div className="bg-white border flex justify-center ">
                 <div
-                    className={`w-fit h-fit border-primary/0 border-b-2 hover:border-primary ${
-                        pathname.includes("task") && "!border-primary"
-                    }`}
+                    className={`w-fit h-fit border-primary/0 border-b-2 hover:border-primary `}
                 >
                     <NavLink
-                        href="/mahasiswa/classroom/1/task"
+                        href={`/student/classroom/${user.data_kelas?.id_tempat_kpm}/task`}
                         className={`group relative flex h-10 items-center gap-2.5 text-[#3c4043] px-4 font-medium duration-100 ease-in-out hover:bg-black/5 border-primary ${
                             (pathname === "/mahasiswa/classroom" ||
                                 pathname.includes("task")) &&
