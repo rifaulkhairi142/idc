@@ -29,7 +29,7 @@ class SupervisorSubmissionController extends Controller
             $usernames = $mahasiswa->pluck('username_mahasiswa')->filter()->toArray();
 
             // Ambil semua tugas yang dikumpulkan oleh mahasiswa
-            $taskSubmissions = Task_submission::with('tugas:id,tipe')
+            $taskSubmissions = Task_submission::with(['tugas:id,tipe', 'mahasiswa:username,name'])
                 ->where('id_tugas', $id_tugas)
                 ->whereIn('username_mahasiswa', $usernames)
                 ->get()
@@ -85,7 +85,7 @@ class SupervisorSubmissionController extends Controller
         $usernames = $mahasiswa->pluck('username_mahasiswa')->filter()->toArray();
 
         // Ambil semua tugas yang dikumpulkan oleh mahasiswa
-        $taskSubmissions = Task_submission::with('tugas:id,tipe')
+        $taskSubmissions = Task_submission::with(['tugas:id,tipe', 'mahasiswa:username,name'])
             ->where('id_tugas', $id_tugas)
             ->whereIn('username_mahasiswa', $usernames)
             ->get()
