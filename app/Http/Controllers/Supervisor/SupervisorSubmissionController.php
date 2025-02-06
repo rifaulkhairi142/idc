@@ -8,6 +8,7 @@ use App\Http\Resources\SubmissionResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\Task_submission;
 use App\Models\Task;
+use App\Models\User;
 use App\Models\LamaranKPM;
 
 class SupervisorSubmissionController extends Controller
@@ -60,6 +61,10 @@ class SupervisorSubmissionController extends Controller
                             'id' => $id_tugas,
                             'tipe' => Task::where('id', $id_tugas)->value('tipe'),
                             ],
+                        'mahasiswa' => (object) [
+                            'username' => $username,
+                            'name' => User::where('username', $username)->value('name'),
+                    ],
                     ]);
                 }
             }
@@ -115,6 +120,10 @@ class SupervisorSubmissionController extends Controller
                     'tugas' => (object) [
                         'id' => $id_tugas,
                         'tipe' => Task::where('id', $id_tugas)->value('tipe'),
+                    ],
+                    'mahasiswa' => (object) [
+                        'username' => $username,
+                        'name' => User::where('username', $username)->value('name'),
                     ],
                 ]);
             }
