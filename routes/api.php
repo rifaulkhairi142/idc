@@ -81,6 +81,7 @@ Route::post('/student/classroom/publiccomment', [CommentController::class, 'crea
 Route::get('/student/classroom/privatecomment', [CommentController::class, 'getPrivateComments']);
 Route::post('/student/classroom/privatecomment', [CommentController::class, 'createPrivateComment']);
 
-Route::put('/supervisor/classroom/score', [SupervisorSubmissionController::class, 'scoreTaskSubmissions']);
+Route::put('/supervisor_kpm/classroom/score', [SupervisorSubmissionController::class, 'scoreTaskSubmissions']);
+Route::get('/supervisor_kpm/classroom/{id_kelas}/{id_task}/tugas-mahasiswa', [SupervisorSubmissionController::class, 'getTaskSubmissions']);
 
 Route::get('/student/classroom/{id}/anggota', [AnggotaController::class, 'anggota']);
