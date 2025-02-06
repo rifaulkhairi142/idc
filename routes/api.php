@@ -83,5 +83,6 @@ Route::post('/student/classroom/privatecomment', [CommentController::class, 'cre
 
 Route::put('/supervisor_kpm/classroom/score', [SupervisorSubmissionController::class, 'scoreTaskSubmissions']);
 Route::get('/supervisor_kpm/classroom/{id_kelas}/{id_task}/tugas-mahasiswa', [SupervisorSubmissionController::class, 'getTaskSubmissions']);
+Route::get('/supervisor_kpm/classroom/{id_kelas}/{id_task}/tugas-mahasiswa/{username}', [SupervisorSubmissionController::class, 'showTaskSubmission']);
 
 Route::get('/student/classroom/{id}/anggota', [AnggotaController::class, 'anggota']);

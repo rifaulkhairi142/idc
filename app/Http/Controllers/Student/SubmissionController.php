@@ -154,7 +154,7 @@ class SubmissionController extends Controller
             }
     
             // Ambil semua data sesuai filter
-            $submissions = $query->paginate(10);
+            $submissions = $query->get();
     
             if ($submissions->isEmpty()) {
                 return new SubmissionResource(false, 'Tidak ada submission yang ditemukan', 404);
