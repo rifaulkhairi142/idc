@@ -15,6 +15,7 @@ use App\Http\Controllers\Student\CommentController;
 use App\Http\Controllers\Student\SubmissionController;
 use App\Http\Controllers\Student\AnggotaController;
 use App\Http\Controllers\Supervisor\SupervisorSubmissionController;
+use App\Http\Controllers\Admin\MahasiswaKPMController;
 use App\Models\AdminSekolah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -86,3 +87,5 @@ Route::get('/supervisor_kpm/classroom/{id_kelas}/{id_task}/tugas-mahasiswa', [Su
 Route::get('/supervisor_kpm/classroom/{id_kelas}/{id_task}/tugas-mahasiswa/{username}', [SupervisorSubmissionController::class, 'showTaskSubmission']);
 
 Route::get('/student/classroom/{id}/anggota', [AnggotaController::class, 'anggota']);
+
+Route::get('/admin/classroom/score', [MahasiswaKPMController::class, 'getScoreTaskSubmissions']);
