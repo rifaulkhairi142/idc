@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('task_submission', function (Blueprint $table) {
+        Schema::create('task_ppl_submission', function (Blueprint $table) {
             $table->id();
             $table->string('username_mahasiswa');
             $table->unsignedBigInteger('id_kelas');
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('username_mahasiswa')->references('username')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_kelas')->references('id')->on('tempat_kpm_tbl')->onDelete('cascade');
-            $table->foreign('id_tugas')->references('id')->on('task')->onDelete('cascade');
+            $table->foreign('id_kelas')->references('id')->on('sekolah_tbl')->onDelete('cascade');
+            $table->foreign('id_tugas')->references('id')->on('task_ppl')->onDelete('cascade');
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('task_submission');
+        Schema::dropIfExists('task_ppl_submission');
     }
 };

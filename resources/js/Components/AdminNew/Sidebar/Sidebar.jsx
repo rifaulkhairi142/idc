@@ -483,8 +483,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             {/* PPL */}
                             <SidebarLinkGroup
                                 activeCondition={
-                                    pathname === "/admin/daftartempatppl" ||
-                                    pathname.includes("ppl")
+                                    pathname === "/admin/daftartempatppl"
                                 }
                             >
                                 {(handleClick, open) => {
@@ -493,11 +492,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                             <NavLink
                                                 to="#"
                                                 className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                                                    (pathname ===
-                                                        "/admin/daftartempatppl" ||
-                                                        pathname.includes(
-                                                            "ppl"
-                                                        )) &&
+                                                    pathname ===
+                                                        "/admin/daftartempatppl" &&
                                                     "bg-graydark dark:bg-meta-4"
                                                 }`}
                                                 onClick={(e) => {
@@ -616,8 +612,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                             {/* CLASSROOM KPM */}
                             <SidebarLinkGroup
                                 activeCondition={
-                                    pathname === "/admin/daftartempatppl" ||
-                                    pathname.includes("ppl")
+                                    pathname === "/admin/classroom-kpm" ||
+                                    "/admin/classroom-ppl"
                                 }
                             >
                                 {(handleClick, open) => {
@@ -630,6 +626,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                                         "/admin/classroom-kpm" ||
                                                         pathname.includes(
                                                             "classroom-kpm"
+                                                        ) ||
+                                                        pathname.includes(
+                                                            "classroom-ppl"
                                                         )) &&
                                                     "bg-graydark dark:bg-meta-4"
                                                 }`}
@@ -643,7 +642,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                                 }}
                                             >
                                                 <SiGoogleclassroom />
-                                                Classroom KPM
+                                                Classroom
                                                 <svg
                                                     className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                                                         open && "rotate-180"
@@ -681,22 +680,31 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                                                 "!text-white"
                                                             }`}
                                                         >
-                                                            Tugas
+                                                            Tugas KPM
                                                         </NavLink>
                                                     </li>
                                                     <li>
                                                         <NavLink
-                                                            href="/admin/lowongan/ppl/pelamar/list"
+                                                            href="/admin/classroom-kpm/student-score"
                                                             className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
-                                                                (pathname ===
-                                                                    "/admin/lowongan/ppl/pelamar/list" ||
-                                                                    pathname.includes(
-                                                                        "ppl/pelamar/list"
-                                                                    )) &&
+                                                                pathname ===
+                                                                    "/admin/classroom-kpm/student-score" &&
                                                                 "!text-white"
                                                             }`}
                                                         >
-                                                            Nilai
+                                                            Nilai KPM
+                                                        </NavLink>
+                                                    </li>
+                                                    <li>
+                                                        <NavLink
+                                                            href="/admin/classroom-ppl/student-score"
+                                                            className={`group relative flex items-center gap-2.5 rounded-md px-4 font-medium duration-300 ease-in-out hover:text-white ${
+                                                                pathname ===
+                                                                    "/admin/classroom-ppl/student-score" &&
+                                                                "!text-white"
+                                                            }`}
+                                                        >
+                                                            Nilai PPL
                                                         </NavLink>
                                                     </li>
                                                 </ul>

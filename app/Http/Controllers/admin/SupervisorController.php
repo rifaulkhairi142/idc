@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\SupervisorExport;
 use App\Http\Controllers\Controller;
 use App\Imports\SupervisorImport;
 use App\Models\User;
@@ -41,8 +42,16 @@ class SupervisorController extends Controller
     {
         try {
             $import = Excel::import(new SupervisorImport, $request->file('daftarsupervisor'));
-            // return redirect()->route('admin.daftarsupervisor');
             return new SupervisorResource(true, 'Berhasil Import Data Supervisor', $import);
+        } catch (\Exception $e) {
+            return new SupervisorResource(false, $e->getMessage(), $e->getCode());
+        }
+    }
+
+    public function exportsupervisor()
+    {
+        try {
+            return Excel::download(new SupervisorExport, 'Kredentials_Supervisor.xlsx');
         } catch (\Exception $e) {
             return new SupervisorResource(false, $e->getMessage(), $e->getCode());
         }

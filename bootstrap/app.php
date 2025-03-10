@@ -8,6 +8,7 @@ use App\Http\Middleware\PendaftaranKPM;
 use App\Http\Middleware\PendaftaranPPL;
 use App\Http\Middleware\Profil;
 use App\Http\Middleware\Supervisor;
+use App\Http\Middleware\SupervisorKPM;
 use App\Http\Middleware\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -33,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'profil' => Profil::class,
             'opt-kecamatan' => OptKecamatan::class,
             'opt-sekolah' => OptSekolah::class,
+            'supervisor-kpm' => SupervisorKPM::class,
             'open_kpm' => PendaftaranKPM::class,
             'open_ppl' => PendaftaranPPL::class,
             'save_profil' => LengkapiProfil::class,

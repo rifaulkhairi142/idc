@@ -54,7 +54,10 @@ const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     </button>
                     {/* <!-- Hamburger Toggle BTN --> */}
 
-                    <Link className="block flex-shrink-0" href="#">
+                    <Link
+                        className="block flex-shrink-0"
+                        href="/supervisor/classroom/home"
+                    >
                         <img className="w-18" src={LogoIcon} alt="Logo" />
                     </Link>
                 </div>

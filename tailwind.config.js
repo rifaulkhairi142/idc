@@ -76,6 +76,7 @@ export default {
     //         },
     //     },
     // },
+    darkMode: "false",
     theme: {
         fontFamily: {
             satoshi: ["Satoshi", "sans-serif"],

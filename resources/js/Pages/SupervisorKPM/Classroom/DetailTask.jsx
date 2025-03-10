@@ -1,6 +1,13 @@
 import InputError from "@/Components/InputError";
 import styled from "@emotion/styled";
-import { Button, IconButton, TextField } from "@mui/material";
+import {
+    Avatar,
+    Breadcrumbs,
+    Button,
+    IconButton,
+    TextField,
+    Typography,
+} from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -9,9 +16,12 @@ import { LuUsers } from "react-icons/lu";
 import { FiUser } from "react-icons/fi";
 import { SendOutlined, SendSharp } from "@mui/icons-material";
 import { ThreeDot } from "react-loading-indicators";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import ClassroomLayout from "@/Layouts/SupervisorKPM/Classroom/ClassroomLayout";
 import NavLink from "@/Components/SupervisorKPM/Classroom/Header/NavLink";
+import axios from "axios";
+import { useEffect } from "react";
+import notFound from "../../../../../public/images/nodata-found 1.png";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -25,16 +35,16 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-const DetailTask = () => {
+const DetailTask = ({ base_url, data, auth }) => {
     const [dokumen, setDokumen] = useState(null);
-    const [errors, setErrors] = useState({
-        dukumen: null,
-        link: null,
-    });
     const [loading, setLoading] = useState(false);
     const [tipeTugas, setTipeTugas] = useState("file");
     const { url, component } = usePage();
     const { pathname, search } = new URL(url, window.location.origin);
+    const [responseError, setResponseError] = useState(null);
+    const [dataTask, setDataTask] = useState(null);
+    const [publiCommentData, setPublicCommentData] = useState([]);
+    const [publicCumment, setPublicComment] = useState(null);
 
     const handleDokumenChange = (e) => {
         const file = e.target.files[0];
@@ -63,6 +73,77 @@ const DetailTask = () => {
             });
         }
     };
+
+    const getTask = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                `${base_url}/api/admin/classroom-kpm/task/${data?.id_tugas}`
+            );
+
+            if (response?.data?.success === true) {
+                setDataTask(response?.data?.data);
+            }
+        } catch (err) {
+        } finally {
+            setLoading(false);
+            getPublicComment();
+        }
+    };
+
+    const getPublicComment = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(
+                `${base_url}/api/student/classroom/publiccomment`,
+                {
+                    params: {
+                        id_kelas: data.id_kelas,
+                        id_tugas: data.id_tugas,
+                    },
+                }
+            );
+            setPublicCommentData(response.data.data);
+        } catch (err) {
+            setResponseError(err.response?.data?.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const makePublicComment = async () => {
+        if (publicCumment !== null) {
+            try {
+                setLoading(true);
+
+                const formData = new FormData();
+                formData.append("tipe", "public");
+                formData.append("id_tugas", data?.id_tugas);
+                formData.append("id_kelas", data?.id_kelas);
+                formData.append("created_by", auth?.user?.username);
+                formData.append("message", publicCumment);
+
+                const response = await axios.post(
+                    `${base_url}/api/student/classroom/publiccomment`,
+                    formData
+                );
+                console.log("response ", response);
+                if (response.data.success === true) {
+                    getPublicComment();
+                    setPublicComment("");
+                }
+            } catch (err) {
+                console.log(err);
+                setResponseError(err.response?.data?.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
+    useEffect(() => {
+        getTask();
+    }, []);
     return (
         <ClassroomLayout>
             <Head title="Detail" />
@@ -73,6 +154,17 @@ const DetailTask = () => {
             )}
             <div className="flex w-full max-w-screen-lg flex-col gap-3">
                 <div className="w-full ">
+                    <div className="py-4">
+                        <Breadcrumbs>
+                            <Link
+                                className="text-primary"
+                                href={`/supervisor-kpm/classroom/${data?.id_kelas}/task`}
+                            >
+                                Tugas
+                            </Link>
+                            <Typography>Detail</Typography>
+                        </Breadcrumbs>
+                    </div>
                     <div className="bg-white flex justify-start ">
                         <div
                             className={`w-fit h-fit border-primary/0 border-b-2 hover:border-primary ${
@@ -80,7 +172,7 @@ const DetailTask = () => {
                             }`}
                         >
                             <NavLink
-                                href="/mahasiswa/classroom/1/task"
+                                href={`/supervisor-kpm/classroom/${data?.id_kelas}/task/${data?.id_tugas}/detail`}
                                 className={`group relative flex h-10 items-center gap-2.5 text-[#3c4043] px-4 font-medium duration-100 ease-in-out hover:bg-black/5 border-primary ${
                                     (pathname === "/mahasiswa/classroom" ||
                                         pathname.includes("task")) &&
@@ -92,7 +184,7 @@ const DetailTask = () => {
                         </div>
                         <div className="w-fit h-fit border-primary/0 border-b-2 hover:border-primary">
                             <NavLink
-                                href="/operator-kecamatan/data/camat-keuchik"
+                                href={`/supervisor-kpm/classroom/${data?.id_kelas}/task/${data?.id_tugas}/tugas-mahasiswa`}
                                 className={`group relative flex h-10 items-center gap-2.5 text-[#3c4043] px-4 font-medium duration-100 ease-in-out hover:bg-primary/10 border-primary ${
                                     (pathname ===
                                         "/operator-kecamatan/data/camat-keuchik" ||
@@ -123,7 +215,7 @@ const DetailTask = () => {
                         <div className="flex flex-col lg:flex-row w-full lg:cols gap-3">
                             <div className="flex w-full flex-col">
                                 <h3 className="font-bold text-[#3c4043]">
-                                    Artikel
+                                    {dataTask?.name}
                                 </h3>
                                 <div className="flex justify-between">
                                     <p className=" text-[#3c4043]">
@@ -131,7 +223,7 @@ const DetailTask = () => {
                                     </p>
 
                                     <p className=" text-[#3c4043]">
-                                        Tenggat 10-02-2025
+                                        Tenggat {dataTask?.tenggat}
                                     </p>
                                 </div>
                                 <hr className="mt-4" />
@@ -140,11 +232,40 @@ const DetailTask = () => {
                                         <LuUsers className="text-xl" />
                                         Class Comments
                                     </div>
-                                    <div></div>
+                                    <ul className="w-full h-full flex flex-col gap-2 py-2">
+                                        {publiCommentData.length > 0 ? (
+                                            publiCommentData.map((item) => (
+                                                <li className="flex flex-row text-textblack gap-2">
+                                                    <Avatar />
+                                                    <div>
+                                                        <h3 className="text-md ">
+                                                            {
+                                                                item.created_by_name
+                                                            }
+                                                        </h3>
+                                                        <p className="text-sm text-wrap">
+                                                            {item.message}
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <div className="flex w-full h-full justify-center">
+                                                <img
+                                                    src={notFound}
+                                                    className="h-40"
+                                                ></img>
+                                            </div>
+                                        )}
+                                    </ul>
                                     <div className="flex gap-x-1">
                                         <TextField
                                             size="small"
                                             label="Add Comment"
+                                            value={publicCumment}
+                                            onChange={(e) =>
+                                                setPublicComment(e.target.value)
+                                            }
                                             sx={{
                                                 width: "100%",
                                                 "& .MuiOutlinedInput-root.Mui-focused":
@@ -158,7 +279,10 @@ const DetailTask = () => {
                                                 },
                                             }}
                                         ></TextField>
-                                        <IconButton>
+                                        <IconButton
+                                            disabled={loading}
+                                            onClick={() => makePublicComment()}
+                                        >
                                             <SendSharp />
                                         </IconButton>
                                     </div>

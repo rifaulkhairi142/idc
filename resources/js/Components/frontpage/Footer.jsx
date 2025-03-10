@@ -16,6 +16,7 @@ import { Head, router } from "@inertiajs/react";
 import { PiListStarBold } from "react-icons/pi";
 import PropTypes from "prop-types";
 import { MdHolidayVillage } from "react-icons/md";
+import { SiGoogleclassroom } from "react-icons/si";
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -62,9 +63,9 @@ const Footer = ({ currentTab }) => {
                     }}
                 >
                     <BottomNavigationAction
-                        label="KPM"
+                        label="Classroom"
                         onClick={() => router.visit("/classroom")}
-                        icon={<MdHolidayVillage />}
+                        icon={<SiGoogleclassroom />}
                     />
                     {/* <BottomNavigationAction
                         label="KPM"

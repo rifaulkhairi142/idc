@@ -84,6 +84,8 @@ class SubmissionController extends Controller
                 }
 
                 $submission->link = $path;
+            } else {
+                $submission->link = $request->link;
             }
 
             // Simpan perubahan
@@ -152,5 +154,10 @@ class SubmissionController extends Controller
             Log::error('Terjadi error saat mengambil submissions: ' . $e->getMessage());
             return new SubmissionResource(false, $e->getMessage(), $e->getCode());
         }
+    }
+
+    public function update_nilai(Request $request)
+    {
+        return response()->json('update nilai');
     }
 }

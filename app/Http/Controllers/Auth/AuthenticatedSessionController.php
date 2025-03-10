@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
             } else if ($request->user()->role === 'opt-kecamatan') {
                 return redirect('/operator-kecamatan/data/camat-keuchik');
             } else if ($request->user()->role = 'supervisor_kpm') {
-                return redirect('/operator-kecamatan/data/camat-keuchik');
+                return redirect('/supervisor/classroom/home');
             } else {
                 return redirect('supervisor/dashboard');
             }

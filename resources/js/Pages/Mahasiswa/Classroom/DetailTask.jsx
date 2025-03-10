@@ -20,6 +20,7 @@ import { Head } from "@inertiajs/react";
 import axios from "axios";
 import { useEffect } from "react";
 import notFound from "../../../../../public/images/nodata-found 1.png";
+import { LinkIcon } from "@heroicons/react/24/outline";
 
 const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -62,10 +63,10 @@ const DetailTask = ({ base_url, data, auth }) => {
 
                 return;
             }
-            if (file.size > 500 * 1024) {
+            if (file.size > 5000 * 1024) {
                 setErrors({
                     ...errors,
-                    dokumen: "Ukuran file tidak boleh melibihi 200kb",
+                    dokumen: "Ukuran file tidak boleh melebihi 5MB",
                 });
 
                 return;
@@ -143,12 +144,12 @@ const DetailTask = ({ base_url, data, auth }) => {
                     getTaskSubmission();
                 }
             } catch (err) {
+                console.log(err);
                 setResponseError(err.response?.data?.message);
             } finally {
                 setLoading(false);
             }
-        }
-        {
+        } else {
             setErrors({
                 dokumen: "Dokumen wajib diupload",
                 link: "Link wajib diisi",
@@ -183,8 +184,7 @@ const DetailTask = ({ base_url, data, auth }) => {
             } finally {
                 setLoading(false);
             }
-        }
-        {
+        } else {
             setErrors({
                 dokumen: "Dokumen wajib diupload",
                 link: "Link wajib diisi",
@@ -405,6 +405,12 @@ const DetailTask = ({ base_url, data, auth }) => {
                                         <li className="text-lg">Your Work</li>
                                         <li>{submissionData?.status}</li>
                                     </ul>
+                                    {submissionData?.status === "dinilai" && (
+                                        <ul className=" flex justify-between">
+                                            <li>{`${submissionData?.score}/100`}</li>
+                                        </ul>
+                                    )}
+
                                     {taskData?.tipe === "File" && (
                                         <div className="flex flex-col gap-y-2">
                                             {link && (
@@ -462,6 +468,16 @@ const DetailTask = ({ base_url, data, auth }) => {
                                     )}
                                     {taskData?.tipe === "Link" && (
                                         <div className="flex flex-col gap-y-2">
+                                            {submissionData?.link && (
+                                                <a
+                                                    target="_blank"
+                                                    href={submissionData.link}
+                                                    className="font-normal text-wrap flex justify-between bg-primary text-white items-center gap-x-2 border w-full  h-10 px-3 py-1 rounded-md cursor-pointer"
+                                                >
+                                                    Lihat Video
+                                                    <LinkIcon className="text-sm w-5" />
+                                                </a>
+                                            )}
                                             <TextField
                                                 size="small"
                                                 type="url"
@@ -503,7 +519,7 @@ const DetailTask = ({ base_url, data, auth }) => {
                                             disableElevation
                                             onClick={(e) => {
                                                 if (
-                                                    getTaskSubmission.status ===
+                                                    submissionData.status ===
                                                     "ditugaskan"
                                                 ) {
                                                     makeSubmission(e);
@@ -531,7 +547,7 @@ const DetailTask = ({ base_url, data, auth }) => {
                                                 >
                                                     <Avatar />
                                                     <div>
-                                                        <h3 className="text-md">
+                                                        {/* <h3 className="text-md">
                                                             {item.created_by !==
                                                             null
                                                                 ? item.receiver !==
@@ -539,6 +555,11 @@ const DetailTask = ({ base_url, data, auth }) => {
                                                                     ? item.receiver_by_name
                                                                     : item.created_by_name
                                                                 : ""}
+                                                        </h3> */}
+                                                        <h3 className="text-md">
+                                                            {
+                                                                item.created_by_name
+                                                            }
                                                         </h3>
                                                         <p className="text-sm text-wrap">
                                                             {item.message}

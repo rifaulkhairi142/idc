@@ -1,21 +1,14 @@
 import React from "react";
 
-import Sidebar from "@/Components/admin/Sidebar/Sidebar";
-import Header from "@/Components/admin/Header/Header";
-import MUIDataTable from "mui-datatables";
 import { Head, Link, router } from "@inertiajs/react";
 import { Alert, Button, Chip, Snackbar } from "@mui/material";
-import { MdDelete, MdOpenInNew } from "react-icons/md";
-import { GrFormView } from "react-icons/gr";
-import { TiEdit } from "react-icons/ti";
-import Modal from "@/Components/Modal";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { ThreeDot } from "react-loading-indicators";
 import AdminLayout from "@/Layouts/Admin/AdminLayout";
 
-const List = ({ daftarprodi, flash, message, base_url }) => {
+const ListNilaiMahasiswa = ({ flash, base_url }) => {
     const [openDialog, setOpenDialog] = useState(false);
     const [idObjToDelete, setIdObjToDelete] = useState(null);
     const [notify, setNotify] = useState(flash.message !== null ? true : false);
@@ -30,12 +23,10 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
     const [searchKey, setSearchKey] = useState("");
     const [visiblePages, setVisiblePages] = useState([]);
     const [prevPage, setPrevPage] = useState(null);
+    const [headerTugas, setHeaderTugas] = useState([]);
 
     const getVisiblePages = (page, dataRuang) => {
-        let totalPages = Math.ceil(
-            dataRuang.data.total / dataRuang?.data?.data?.length
-        );
-        console.log("total pages", dataRuang?.data?.data?.length);
+        let totalPages = Math.ceil(dataRuang.total / dataRuang?.data?.length);
 
         const vvisiblePages = [];
         if (totalPages <= 5) {
@@ -68,13 +59,21 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
 
         try {
             const response = await axios.get(
-                `${base_url}/api/admin/daftarsupervisor?page=${currentPage}&search_key=${searchKey}`
+                `${base_url}/api/admin/classroom-kpm/nilai/query`,
+                {
+                    params: {
+                        page: currentPage,
+                        search: searchKey,
+                    },
+                }
             );
-            setDataRuang(response.data.data);
-            setCurrentPage(response.data.data.current_page);
-            setLastPage(response.data.data.last_page);
-            getVisiblePages(response.data.data.current_page, response.data);
-            console.log(currentPage);
+            setDataRuang(response.data);
+
+            setCurrentPage(response.data.current_page);
+            setHeaderTugas(response.data.headers);
+
+            setLastPage(response.data.last_page);
+            getVisiblePages(response.data.current_page, response.data);
         } catch (err) {
             console.log(err);
             setError(err.response?.data?.message || "Something went wrong.");
@@ -88,7 +87,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
 
         try {
             const response = await axios.post(
-                `${base_url}/api/admin/users/supervisor-kpm/export`,
+                `${base_url}/api/admin/classroom-kpm/nilai/export`,
                 {}, // Pass the request body here
                 {
                     responseType: "blob", // Set responseType in Axios config
@@ -104,7 +103,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
             a.href = downloadUrl;
 
             const contentDisposition = response.headers["content-disposition"];
-            let filename = "supervisor.xlsx";
+            let filename = "camat_keuchik.xlsx";
             if (contentDisposition) {
                 const match = contentDisposition.match(/filename="(.+)"/);
                 if (match && match[1]) {
@@ -129,24 +128,8 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
         }
     };
 
-    const deleteRecords = async (id) => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await axios.delete(
-                `${base_url}/api/admin/users/supervisor-kpm/${id}`
-            );
-            fetchData();
-        } catch (err) {
-            setError(err.response?.data?.message || "Something went wrong.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        if (currentPage !== prevPage || message !== null) {
+        if (currentPage !== prevPage) {
             fetchData(); // Only fetch if currentPage is different from prevPage
             setPrevPage(currentPage); // Update prevPage
         }
@@ -227,34 +210,9 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
 
     return (
         <AdminLayout className="main flex">
-            <Head title="Supervisor KPM" />
             <div className="flex w-full flex-col">
                 <div className="px-3">
                     <div className="flex w-full justify-start gap-x-2 py-2">
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            // disabled={loading}
-                            sx={{ textTransform: "capitalize" }}
-                            onClick={(e) => {
-                                router.visit("/admin/users/supervisor-kpm/add");
-                            }}
-                        >
-                            Tambah
-                        </Button>
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            // disabled={loading}
-                            sx={{ textTransform: "capitalize" }}
-                            onClick={(e) => {
-                                router.visit(
-                                    "/admin/users/supervisor-kpm/import"
-                                );
-                            }}
-                        >
-                            Import
-                        </Button>
                         <Button
                             variant="contained"
                             disableElevation
@@ -348,17 +306,38 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                 scope="col"
                                                 className="px-4 py-3"
                                             >
-                                                NIP
+                                                NIM
                                             </th>
-
                                             <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nama Tempat KPM
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nama Supervisor
+                                            </th>
+                                            {headerTugas.map((item) => (
+                                                <th
+                                                    key={item.id_tugas}
+                                                    scope="col"
+                                                    className="px-4 py-3"
+                                                >
+                                                    {item?.nama_tugas}
+                                                </th>
+                                            ))}
+
+                                            {/* <th
                                                 scope="col"
                                                 className="px-4 py-3"
                                             >
                                                 <span className="sr-only">
                                                     Actions
                                                 </span>
-                                            </th>
+                                            </th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -371,16 +350,27 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                     scope="row"
                                                     className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                                 >
-                                                    {item.row_index}
+                                                    {item.number}
                                                 </th>
                                                 <td className="px-4 py-3">
-                                                    {item?.name}
+                                                    {item?.nama_mahasiswa}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    {item?.username}
+                                                    {item?.username_mahasiswa}
                                                 </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nama_tempat_kpm}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nama_supervisor}
+                                                </td>
+                                                {item?.tasks?.map((item) => (
+                                                    <td className="px-4 py-3">
+                                                        {item?.score}
+                                                    </td>
+                                                ))}
 
-                                                <td className="px-4 py-3 flex items-center justify-end">
+                                                {/* <td className="px-4 py-3 flex items-center justify-end">
                                                     <button
                                                         onClick={() =>
                                                             toggleDropdown(
@@ -410,7 +400,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                                     <a
                                                                         onClick={() => {
                                                                             router.get(
-                                                                                `/admin/users/supervisor-kpm/edit/${item.id}`
+                                                                                `/admin/classroom-kpm/tugas/detail/${item.id}`
                                                                             );
                                                                             setDropdownOpen(
                                                                                 null
@@ -440,7 +430,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                             </div>
                                                         </div>
                                                     )}
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         ))}
                                     </tbody>
@@ -578,4 +568,4 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
     );
 };
 
-export default List;
+export default ListNilaiMahasiswa;

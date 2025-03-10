@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminKecamatanController;
 use App\Http\Controllers\Admin\AdminSekolahController;
 use App\Http\Controllers\Admin\CamatKeuchikController;
 use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
+use App\Http\Controllers\Admin\ClassroomPPLController;
 use App\Http\Controllers\Admin\KepsekkPamongController;
 use App\Http\Controllers\Admin\LowonganPPLController;
 use App\Http\Controllers\Admin\MahasiswaKPMController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\Admin\TempatPPLController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeControler;
 use App\Http\Controllers\Mahasiswa\Classroom\HomeController;
+use App\Http\Controllers\Mahasiswa\ClassroomPPLController as MahasiswaClassroomPPLController;
 use App\Http\Controllers\Mahasiswa\LowonganKPM;
 use App\Http\Controllers\Mahasiswa\LowonganPPL;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
@@ -54,17 +56,21 @@ Route::middleware(['auth', 'opt-kecamatan'])->group(function () {
     Route::get('/operator-kecamatan/data/camat-keuchik/add', [OperatorKecamatanController::class, 'camat_keuchik_add']);
     Route::get('/operator-kecamatan/data/camat-keuchik/detail/{id}', [OperatorKecamatanController::class, 'camat_keuchik_detail']);
 });
-Route::middleware([])->group(function () {
-    Route::get('/mahasiswa/classroom/1/task', [HomeController::class, 'index']);
-    Route::get('/mahasiswa/classroom/1/task/1/detail', [TaskController::class, 'detail']);
-});
+// Route::middleware([])->group(function () {
+//     Route::get('/mahasiswa/classroom/1/task', [HomeController::class, 'index']);
+//     Route::get('/mahasiswa/classroom/1/task/1/detail', [TaskController::class, 'detail']);
+// });
 
-Route::middleware([])->group(function () {
-    Route::get('/supervisor-kpm/classroom/home', [ClassroomController::class, 'index']);
-    
-    Route::get('/supervisor-kpm/classroom/1/task', [ClassroomController::class, 'viewTask']);
-    Route::get('/supervisor-kpm/classroom/1/task/1/detail', [ClassroomController::class, 'detail']);
-    Route::get('/supervisor-kpm/classroom/1/task/1/tugas-mahasiswa', [ClassroomController::class, 'tugasMahasiswa']);
+Route::middleware(['auth', 'supervisor-kpm'])->group(function () {
+    Route::get('/supervisor/classroom/home', [ClassroomController::class, 'index']);
+
+    Route::get('/supervisor-kpm/classroom/{id}/task', [ClassroomController::class, 'viewTask']);
+    Route::get('/supervisor-kpm/classroom/{id_kelas}/task/{id_tugas}/detail', [ClassroomController::class, 'detail']);
+    Route::get('/supervisor-kpm/classroom/{id_kelas}/task/{id_tugas}/tugas-mahasiswa', [ClassroomController::class, 'tugasMahasiswa']);
+    Route::get('/supervisor-kpm/classroom/{id_kelas}/task/{id_tugas}/tugas-mahasiswa/{username_mahasiswa}', [ClassroomController::class, 'tugasMahasiswa']);
+
+    Route::get('/supervisor-ppl/classroom/{id_sekolah}', [ClassroomPPLController::class, 'index']);
+    Route::get('/supervisor-ppl/classroom/mahasiswa/{id_sekolah}/{nim}', [ClassroomPPLController::class, 'detailTugasMahasiswa']);
 });
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -78,6 +84,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/classroom-kpm/tugas', [AdminClassroomController::class, 'tugas']);
     Route::get('/admin/classroom-kpm/tugas/add', [AdminClassroomController::class, 'tugas_add']);
     Route::get('/admin/classroom-kpm/tugas/detail/{id}', [AdminClassroomController::class, 'tugas_edit']);
+    Route::get('/admin/classroom-ppl/student-score', [AdminClassroomController::class, 'nilaiPPL']);
 
     // Data
     Route::get('/admin/daftarprodi', [ProdiController::class, 'show'])->name("admin.daftarprodi");
@@ -169,6 +176,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users/supervisor-kpm', [SupervisorKPMController::class, 'list']);
     Route::get('/admin/users/supervisor-kpm/add', [SupervisorKPMController::class, 'add']);
     Route::get('/admin/users/supervisor-kpm/edit/{id}', [SupervisorKPMController::class, 'edit']);
+    Route::get('/admin/users/supervisor-kpm/import', [SupervisorKPMController::class, 'import']);
+
+    Route::get('/admin/classroom-kpm/student-score', [AdminClassroomController::class, 'studentScore']);
 });
 
 
@@ -196,6 +206,10 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/student/classroom/{id}/task', [StudentClassroomController::class, 'tasks']);
     Route::get('/student/classroom/{id_kelas}/task/detail/{id_tugas}', [StudentClassroomController::class, 'detail_tugas']);
+
+
+    Route::get('/student/classroom-ppl/tasks', [MahasiswaClassroomPPLController::class, 'tasks']);
+    Route::get('/student/classroom-ppl/tasks/{id_task}', [MahasiswaClassroomPPLController::class, 'detailTask']);
 });
 
 

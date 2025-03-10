@@ -1,21 +1,25 @@
 import React from "react";
 
-import Sidebar from "@/Components/admin/Sidebar/Sidebar";
-import Header from "@/Components/admin/Header/Header";
-import MUIDataTable from "mui-datatables";
 import { Head, Link, router } from "@inertiajs/react";
 import { Alert, Button, Chip, Snackbar } from "@mui/material";
-import { MdDelete, MdOpenInNew } from "react-icons/md";
-import { GrFormView } from "react-icons/gr";
-import { TiEdit } from "react-icons/ti";
-import Modal from "@/Components/Modal";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 import { ThreeDot } from "react-loading-indicators";
 import AdminLayout from "@/Layouts/Admin/AdminLayout";
+import {
+    OpenInBrowser,
+    OpenInBrowserRounded,
+    OpenInBrowserTwoTone,
+    OpenInNew,
+    OpenInNewOffTwoTone,
+    OpenInNewRounded,
+    OpenInNewSharp,
+    ViewAgenda,
+} from "@mui/icons-material";
+import { MdOpenInNew } from "react-icons/md";
 
-const List = ({ daftarprodi, flash, message, base_url }) => {
+const ListNilaiMahasiswa = ({ flash, base_url }) => {
     const [openDialog, setOpenDialog] = useState(false);
     const [idObjToDelete, setIdObjToDelete] = useState(null);
     const [notify, setNotify] = useState(flash.message !== null ? true : false);
@@ -30,12 +34,10 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
     const [searchKey, setSearchKey] = useState("");
     const [visiblePages, setVisiblePages] = useState([]);
     const [prevPage, setPrevPage] = useState(null);
+    const [headerTugas, setHeaderTugas] = useState([]);
 
     const getVisiblePages = (page, dataRuang) => {
-        let totalPages = Math.ceil(
-            dataRuang.data.total / dataRuang?.data?.data?.length
-        );
-        console.log("total pages", dataRuang?.data?.data?.length);
+        let totalPages = Math.ceil(dataRuang.total / dataRuang?.data?.length);
 
         const vvisiblePages = [];
         if (totalPages <= 5) {
@@ -68,13 +70,23 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
 
         try {
             const response = await axios.get(
-                `${base_url}/api/admin/daftarsupervisor?page=${currentPage}&search_key=${searchKey}`
+                `${base_url}/api/admin/classroom-ppl/student-score`,
+                {
+                    params: {
+                        page: currentPage,
+                        search: searchKey,
+                    },
+                }
             );
             setDataRuang(response.data.data);
+
             setCurrentPage(response.data.data.current_page);
+
             setLastPage(response.data.data.last_page);
-            getVisiblePages(response.data.data.current_page, response.data);
-            console.log(currentPage);
+            getVisiblePages(
+                response.data.data.current_page,
+                response.data.data
+            );
         } catch (err) {
             console.log(err);
             setError(err.response?.data?.message || "Something went wrong.");
@@ -88,7 +100,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
 
         try {
             const response = await axios.post(
-                `${base_url}/api/admin/users/supervisor-kpm/export`,
+                `${base_url}/api/admin/classroom-kpm/nilai/export`,
                 {}, // Pass the request body here
                 {
                     responseType: "blob", // Set responseType in Axios config
@@ -104,7 +116,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
             a.href = downloadUrl;
 
             const contentDisposition = response.headers["content-disposition"];
-            let filename = "supervisor.xlsx";
+            let filename = "camat_keuchik.xlsx";
             if (contentDisposition) {
                 const match = contentDisposition.match(/filename="(.+)"/);
                 if (match && match[1]) {
@@ -129,24 +141,8 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
         }
     };
 
-    const deleteRecords = async (id) => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await axios.delete(
-                `${base_url}/api/admin/users/supervisor-kpm/${id}`
-            );
-            fetchData();
-        } catch (err) {
-            setError(err.response?.data?.message || "Something went wrong.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     useEffect(() => {
-        if (currentPage !== prevPage || message !== null) {
+        if (currentPage !== prevPage) {
             fetchData(); // Only fetch if currentPage is different from prevPage
             setPrevPage(currentPage); // Update prevPage
         }
@@ -225,37 +221,35 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
         setNotify(false);
     };
 
+    const handleOpenInstrumentClick = (link) => {
+        if (link) {
+            window.open(
+                link,
+                "_blank",
+                `width=${screen.width * 0.8}, height=${
+                    screen.height * 0.6
+                }, left=100, top=100`
+            );
+        }
+    };
+
+    const handleOpenLaporanPPL = (link) => {
+        window.open(
+            link,
+            "_blank",
+            `width=${screen.width * 0.8}, height=${
+                screen.height * 0.6
+            }, left=100, top=100`
+        );
+    };
+
     return (
         <AdminLayout className="main flex">
-            <Head title="Supervisor KPM" />
+            <Head title="Nilai PPL" />
             <div className="flex w-full flex-col">
                 <div className="px-3">
                     <div className="flex w-full justify-start gap-x-2 py-2">
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            // disabled={loading}
-                            sx={{ textTransform: "capitalize" }}
-                            onClick={(e) => {
-                                router.visit("/admin/users/supervisor-kpm/add");
-                            }}
-                        >
-                            Tambah
-                        </Button>
-                        <Button
-                            variant="contained"
-                            disableElevation
-                            // disabled={loading}
-                            sx={{ textTransform: "capitalize" }}
-                            onClick={(e) => {
-                                router.visit(
-                                    "/admin/users/supervisor-kpm/import"
-                                );
-                            }}
-                        >
-                            Import
-                        </Button>
-                        <Button
+                        {/* <Button
                             variant="contained"
                             disableElevation
                             // disabled={loading}
@@ -265,7 +259,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                             }}
                         >
                             Export
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
 
@@ -348,17 +342,53 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                 scope="col"
                                                 className="px-4 py-3"
                                             >
-                                                NIP
+                                                NIM
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nama Tempat KPM
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nama Supervisor
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nilai Pamong
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Nilai Supervisor
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Instrument
+                                            </th>
+                                            <th
+                                                scope="col"
+                                                className="px-4 py-3"
+                                            >
+                                                Laporan PPL
                                             </th>
 
-                                            <th
+                                            {/* <th
                                                 scope="col"
                                                 className="px-4 py-3"
                                             >
                                                 <span className="sr-only">
                                                     Actions
                                                 </span>
-                                            </th>
+                                            </th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -374,13 +404,58 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                     {item.row_index}
                                                 </th>
                                                 <td className="px-4 py-3">
-                                                    {item?.name}
+                                                    {item?.nama_mahasiswa}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    {item?.username}
+                                                    {item?.nim}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nama_sekolah}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nama_supervisor}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nilai_pamong}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.nilai_supervisor_ppl}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.link_instrument_penilaian && (
+                                                        <button
+                                                            className="text-blue-500"
+                                                            onClick={(e) =>
+                                                                handleOpenInstrumentClick(
+                                                                    base_url +
+                                                                        "/storage/" +
+                                                                        item?.link_instrument_penilaian?.replace(
+                                                                            "public/",
+                                                                            ""
+                                                                        )
+                                                                )
+                                                            }
+                                                        >
+                                                            <OpenInNewRounded />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                                <td className="px-4 py-3">
+                                                    {item?.link_laporan && (
+                                                        <button
+                                                            className="text-blue-500"
+                                                            onClick={(e) =>
+                                                                handleOpenInstrumentClick(
+                                                                    item.link_laporan
+                                                                )
+                                                            }
+                                                        >
+                                                            <OpenInNewRounded />
+                                                        </button>
+                                                    )}
                                                 </td>
 
-                                                <td className="px-4 py-3 flex items-center justify-end">
+                                                {/* <td className="px-4 py-3 flex items-center justify-end">
                                                     <button
                                                         onClick={() =>
                                                             toggleDropdown(
@@ -410,7 +485,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                                     <a
                                                                         onClick={() => {
                                                                             router.get(
-                                                                                `/admin/users/supervisor-kpm/edit/${item.id}`
+                                                                                `/admin/classroom-kpm/tugas/detail/${item.id}`
                                                                             );
                                                                             setDropdownOpen(
                                                                                 null
@@ -440,7 +515,7 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                             </div>
                                                         </div>
                                                     )}
-                                                </td>
+                                                </td> */}
                                             </tr>
                                         ))}
                                     </tbody>
@@ -578,4 +653,4 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
     );
 };
 
-export default List;
+export default ListNilaiMahasiswa;

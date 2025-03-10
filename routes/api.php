@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\AdminKecamatanController;
 use App\Http\Controllers\Admin\AdminSekolahController;
 use App\Http\Controllers\Admin\CamatKeuchikController;
+use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
+use App\Http\Controllers\Admin\ClassroomPPLController;
 use App\Http\Controllers\Admin\KepsekkPamongController;
 use App\Http\Controllers\Admin\LowonganPPLController;
 use App\Http\Controllers\LowonganKPMApiController;
@@ -19,6 +21,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\SupervisorKPMController;
+use App\Http\Controllers\Mahasiswa\ClassroomPPLController as MahasiswaClassroomPPLController;
+use App\Http\Controllers\SupervisorKPM\ClassroomController;
+use App\Http\Controllers\SupervisorKPM\SupervisorSubmissionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -84,3 +89,25 @@ Route::get('/student/classroom/privatecomment', [CommentController::class, 'getP
 Route::post('/student/classroom/privatecomment', [CommentController::class, 'createPrivateComment']);
 
 Route::get('/admin/users/supervisor-kpm', [SupervisorKPMController::class, 'all']);
+Route::get('/supervisor-kpm/classroom/{id_kelas}/{id_tugas}/tugas-mahasiswa', [SupervisorSubmissionController::class, 'getTaskSubmissions']);
+Route::get('/supervisor-kpm/classroom/{id_kelas}/{id_tugas}/tugas-mahasiswa/{username}', [SupervisorSubmissionController::class, 'showTaskSubmission']);
+Route::post('/supervisor-kpm/classroom/tugas-mahasiswa/nilai/update', [SupervisorSubmissionController::class, 'scoreTaskSubmissions']);
+
+Route::get('/supervisor-kpm/classroom/private-comment', [ClassroomController::class, 'getPrivateComment']);
+Route::post('/admin/users/supervisor-kpm/export', [SupervisorController::class, 'exportsupervisor']);
+
+Route::get('/admin/classroom-kpm/nilai/query', [AdminClassroomController::class, 'queryNilai']);
+Route::post("/admin/classroom-kpm/nilai/export", [AdminClassroomController::class, 'exportNilaiKPM']);
+Route::get('/classroom/supervisor-ppl/mahasiswa', [ClassroomPPLController::class, 'list_mahasiswa']);
+
+Route::post('/supervisor-ppl/classroom/mahasiswa/update/{nim}', [ClassroomPPLController::class, 'updateNilai']);
+Route::post('/supervisor-ppl/classroom/private-comment/add', [ClassroomPPLController::class, 'supervisorMakePrivateComment']);
+Route::get('/supervisor-ppl/classroom/private-comment', [ClassroomPPLController::class, 'supervisorGetPrivateComment']);
+Route::get('/classroom-ppl/task', [MahasiswaClassroomPPLController::class, 'getTask']);
+Route::get('/student/classroom-ppl/task/submission', [MahasiswaClassroomPPLController::class, 'getSubmission']);
+Route::post('/student/classroom-ppl/task/submission/create', [MahasiswaClassroomPPLController::class, 'createSubmission']);
+
+
+Route::post('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLController::class, 'createComment']);
+Route::get('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLController::class, 'getPrivateComment']);
+Route::get('/admin/classroom-ppl/student-score', [AdminClassroomController::class, 'getStudentsScore']);

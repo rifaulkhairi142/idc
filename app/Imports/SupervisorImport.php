@@ -30,7 +30,7 @@ class SupervisorImport implements ToCollection, ToModel
                 'name' => $row[1],
                 'email' => $row[3],
                 'username' => $row[4],
-                'role' => 'supervisor',
+                'role' => 'supervisor_kpm',
                 'password' => Hash::make($row[4]),
             ]);
         }

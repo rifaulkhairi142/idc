@@ -135,7 +135,7 @@ class TaskController extends Controller
                 )
                 ->first();
 
-            $data_kelas['tasks'] = Task::all();
+            $data_kelas['tasks'] = Task::orderBy('created_at', 'desc')->get();
 
             if (!$data_kelas) {
                 return response()->json(['message' => 'Data tidak ditemukan'], 404);

@@ -64,7 +64,7 @@ class TempatPPLController extends Controller
     public function edit($id)
     {
         $tempatppl = Sekolah::find($id);
-        $supervisor = User::where('users.role', 'supervisor')->select('users.username', 'users.name')->get();
+        $supervisor = User::where('users.role', 'supervisor_kpm')->select('users.username', 'users.name')->get();
         return Inertia::render('Admin/pages/PPL/tempatppl/EditTempatPPL', [
             'supervisordata' => $supervisor,
             'tempatppl' => $tempatppl

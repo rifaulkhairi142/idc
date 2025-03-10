@@ -33,4 +33,13 @@ class SupervisorKPMController extends Controller
             'data' => ['id_supervisor' => $id]
         ]);
     }
+
+    public function import(Request $request)
+    {
+        return Inertia::render('Admin/pages/Pengguna/SupervisorKPM/Import', [
+            'base_url' => url('/')
+        ]);
+    }
+
+    
 }

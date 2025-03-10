@@ -6,6 +6,7 @@ import { FaAngleRight } from "react-icons/fa6";
 import { AiOutlineDatabase } from "react-icons/ai";
 import { LuUsers } from "react-icons/lu";
 import { Link, router } from "@inertiajs/react";
+import { SiGoogleclassroom } from "react-icons/si";
 
 const Sidebar = ({ tabId }) => {
     const [activeTab, setActiveTab] = useState(tabId);
@@ -345,9 +346,9 @@ const Sidebar = ({ tabId }) => {
                                 onClick={() => isOpenSubmenu(5)}
                             >
                                 <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md">
-                                    <LuUsers />
+                                    <SiGoogleclassroom />
                                 </span>
-                                Classroom KPM
+                                Classroom
                                 <span
                                     className={`arrow ml-auto w-[25px]  h-[25px] flex items-center justify-center ${
                                         activeTab === 5 &&
@@ -375,17 +376,27 @@ const Sidebar = ({ tabId }) => {
                                             )
                                         }
                                     >
-                                        Tugas
+                                        Tugas KPM
                                     </Button>
                                     <Button
                                         className="w-full"
                                         onClick={() => {
-                                            // router.visit(
-                                            //     "/admin/daftarsupervisor"
-                                            // );
+                                            router.visit(
+                                                "/admin/classroom-kpm/student-score"
+                                            );
                                         }}
                                     >
-                                        Nilai
+                                        Nilai KPM
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() => {
+                                            router.visit(
+                                                "/admin/classroom-ppl/student-score"
+                                            );
+                                        }}
+                                    >
+                                        Nilai PPL
                                     </Button>
                                 </div>
                             </div>

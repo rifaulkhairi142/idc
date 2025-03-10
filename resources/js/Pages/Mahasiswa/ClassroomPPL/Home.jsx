@@ -1,37 +1,16 @@
+import ClassroomLayout from "@/Layouts/Mahasiswa/Classroom/ClassroomLayout";
 import React from "react";
 import banner from "../../../../../public/assets/img_backtoschool.jpg";
 import { BiTask } from "react-icons/bi";
 import { Head, router } from "@inertiajs/react";
-import ClassroomLayout from "@/Layouts/SupervisorKPM/Classroom/ClassroomLayout";
 import { useState } from "react";
-import { ThreeDot } from "react-loading-indicators";
+import axios from "axios";
 import { useEffect } from "react";
+import { ThreeDot } from "react-loading-indicators";
 
-const ViewKelas = ({ base_url, data }) => {
+const Home = ({ base_url, data }) => {
     const [responseError, setResponseError] = useState(null);
-    const [dataKelas, setDataKelas] = useState(null);
     const [loading, setLoading] = useState(false);
-
-    const getData = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.get(
-                `${base_url}/api/student/classroom/${data.id_kelas}/task`
-            );
-
-            if (response?.data?.success === true) {
-                setDataKelas(response?.data?.data);
-            }
-        } catch (err) {
-            setResponseError(err?.response?.data?.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        getData();
-    }, []);
 
     return (
         <ClassroomLayout>
@@ -41,7 +20,7 @@ const ViewKelas = ({ base_url, data }) => {
                     <ThreeDot color="#4F61E3" size="medium" />
                 </div>
             )}
-            <div className="bg-white w-full max-w-screen-lg flex flex-col gap-y-3">
+            <div className="bg-white w-full  flex flex-col gap-y-3">
                 <div className="w-full relative">
                     <img
                         src={banner}
@@ -50,7 +29,7 @@ const ViewKelas = ({ base_url, data }) => {
                     <div className="absolute inset-0 flex flex-col justify-end text-white bg-black-2/25 rounded-md">
                         <ul className="p-4">
                             <li className="font-bold text-xl md:text-2xl lg:text-4xl ">
-                                {dataKelas?.name}
+                                {data?.data_kelas?.nama_tempat}
                             </li>
                             <li className="text-md md:text-lg lg:text-xl">
                                 PPKPM Ganjil 2025/2026
@@ -60,13 +39,13 @@ const ViewKelas = ({ base_url, data }) => {
                 </div>
                 {/* #129eaf */}
                 <ul className="flex flex-col gap-y-3">
-                    {dataKelas?.tasks?.map((item) => (
+                    {data?.tasks?.map((item) => (
                         <li
                             key={item.id}
                             className="w-full border-2 rounded-lg p-3 flex gap-x-3 bg-white hover:bg-primary/5 cursor-pointer"
                             onClick={(e) =>
                                 router.visit(
-                                    `/supervisor-kpm/classroom/${data.id_kelas}/task/${item.id}/tugas-mahasiswa`
+                                    `/student/classroom-ppl/tasks/${item?.id}`
                                 )
                             }
                         >
@@ -98,4 +77,4 @@ const ViewKelas = ({ base_url, data }) => {
     );
 };
 
-export default ViewKelas;
+export default Home;
