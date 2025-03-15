@@ -111,3 +111,4 @@ Route::post('/student/classroom-ppl/task/submission/create', [MahasiswaClassroom
 Route::post('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLController::class, 'createComment']);
 Route::get('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLController::class, 'getPrivateComment']);
 Route::get('/admin/classroom-ppl/student-score', [AdminClassroomController::class, 'getStudentsScore']);
+Route::post('/admin/classroom-ppl/student-score/export', [AdminClassroomController::class, 'exportStudentsScorePPL']);

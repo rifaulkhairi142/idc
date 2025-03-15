@@ -100,7 +100,7 @@ const ListNilaiMahasiswa = ({ flash, base_url }) => {
 
         try {
             const response = await axios.post(
-                `${base_url}/api/admin/classroom-kpm/nilai/export`,
+                `${base_url}/api/admin/classroom-ppl/student-score/export`,
                 {}, // Pass the request body here
                 {
                     responseType: "blob", // Set responseType in Axios config
@@ -116,7 +116,16 @@ const ListNilaiMahasiswa = ({ flash, base_url }) => {
             a.href = downloadUrl;
 
             const contentDisposition = response.headers["content-disposition"];
-            let filename = "camat_keuchik.xlsx";
+            const now = new Date();
+            const jakartaTime = new Date(now.getTime() + 7 * 60 * 60 * 1000); // Convert to UTC+7
+            const formattedDate = jakartaTime
+                .toISOString()
+                .slice(0, 19)
+                .replace("T", "_")
+                .replace(/:/g, "-");
+
+            let filename = `Nilai PPL_${formattedDate}.xlsx`;
+
             if (contentDisposition) {
                 const match = contentDisposition.match(/filename="(.+)"/);
                 if (match && match[1]) {
@@ -249,7 +258,7 @@ const ListNilaiMahasiswa = ({ flash, base_url }) => {
             <div className="flex w-full flex-col">
                 <div className="px-3">
                     <div className="flex w-full justify-start gap-x-2 py-2">
-                        {/* <Button
+                        <Button
                             variant="contained"
                             disableElevation
                             // disabled={loading}
@@ -259,7 +268,7 @@ const ListNilaiMahasiswa = ({ flash, base_url }) => {
                             }}
                         >
                             Export
-                        </Button> */}
+                        </Button>
                     </div>
                 </div>
 

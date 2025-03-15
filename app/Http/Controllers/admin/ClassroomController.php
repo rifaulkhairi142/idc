@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ExportNilaiPPL;
 use App\Exports\NilaiKPMExport;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -119,6 +121,16 @@ class ClassroomController extends Controller
 
 
         return Excel::download(new NilaiKPMExport, 'nilai kpm.xlsx');;
+    }
+
+    public function exportStudentsScorePPL()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $timestamp = Carbon::now()->format('Y-m-d_H-i-s');
+        $filename = "Nilai_PPL_{$timestamp}.xlsx";
+
+        return Excel::download(new ExportNilaiPPL, $filename);
     }
 
     public function getStudentsScore(Request $request)
