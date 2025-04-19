@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Middleware\User;
 use App\Models\AmprahamPPL;
 use App\Models\LamaranPPL;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +73,11 @@ class KepsekkPamongController extends Controller
             ->first();
         return Inertia::render('Admin/pages/Data/KepsekPamong/Detail', ['data' => $data, 'base_url' => url('/')]);
     }
+
+    public function edit ($id){
+        dd($id);
+        return Inertia::render('');
+    }
     public function export()
     {
         return Excel::download(new KepsekPamongExport, 'data_kepsek_pamong.xlsx');
@@ -130,6 +136,14 @@ class KepsekkPamongController extends Controller
                 'message' => $e->getMessage()
             ], $e->getCode());
         }
+    }
+
+    public function downloadCertificate(Request $request) {
+        $data = [];
+        $pdf = Pdf::loadView('certificate', $data);
+        return $pdf->download('certificate_PPKPM.pdf');
+
+
     }
 }
 

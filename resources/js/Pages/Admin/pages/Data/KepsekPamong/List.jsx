@@ -517,6 +517,21 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                                         Show
                                                                     </a>
                                                                 </li>
+                                                                <li>
+                                                                    <a
+                                                                        onClick={() => {
+                                                                            router.get(
+                                                                                `/admin/data/kepsek-pamong/edit/'${item.id}`
+                                                                            );
+                                                                            setDropdownOpen(
+                                                                                null
+                                                                            );
+                                                                        }}
+                                                                        className="cursor-pointer block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                                    >
+                                                                        Edit
+                                                                    </a>
+                                                                </li>
                                                             </ul>
                                                             <div className="py-1">
                                                                 <a

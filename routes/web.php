@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SupervisorController as AdminSupervisorController
 use App\Http\Controllers\Admin\SupervisorKPMController;
 use App\Http\Controllers\Admin\TempatKPM;
 use App\Http\Controllers\Admin\TempatPPLController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeControler;
 use App\Http\Controllers\Mahasiswa\Classroom\HomeController;
@@ -77,6 +78,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name("admin.dashboard");
     Route::get('/admin/data/camat-keuchik', [CamatKeuchikController::class, 'list']);
     Route::get('/admin/data/kepsek-pamong', [KepsekkPamongController::class, 'list']);
+    Route::get('/admin/data/kepsek-pamong/edit/{id}', [KepsekkPamongController::class, 'edit']);
     Route::get('/admin/data/kepsek-pamong/detail/{id}', [KepsekkPamongController::class, 'detail']);
     Route::get('/admin/camat-keuchik/detail/{id}', [CamatKeuchikController::class, 'detail']);
 
@@ -179,6 +181,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/users/supervisor-kpm/import', [SupervisorKPMController::class, 'import']);
 
     Route::get('/admin/classroom-kpm/student-score', [AdminClassroomController::class, 'studentScore']);
+
+    Route::get('/admin/certificate/nilai-ppkpm', [CertificateController::class, 'nilaiPPKPM']);
+    Route::get('/admin/certificate/settings', [CertificateController::class, 'settings']);
 });
 
 
@@ -210,6 +215,8 @@ Route::middleware(['auth', 'user'])->group(function () {
 
     Route::get('/student/classroom-ppl/tasks', [MahasiswaClassroomPPLController::class, 'tasks']);
     Route::get('/student/classroom-ppl/tasks/{id_task}', [MahasiswaClassroomPPLController::class, 'detailTask']);
+    
+
 });
 
 
@@ -218,6 +225,10 @@ Route::middleware(['auth', 'user'])->group(function () {
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/pw', [testcontroller::class, 'index'])->name('index');
+Route::get('/certificate', function(){
+    return view('certificate');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -152,7 +152,7 @@ const ListAdmin = ({ daftaradmin, flash }) => {
                 </div>
             </div>
             <Modal show={openDialog} closeable={true} onClose={onDialogClose}>
-                <div className="p-3">
+                {/* <div className="p-3">
                     <ul className=" flex flex-col">
                         <li className="text-md font-bold">
                             Yakin ingin menghapus
@@ -175,7 +175,7 @@ const ListAdmin = ({ daftaradmin, flash }) => {
                             </button>
                         </li>
                     </ul>
-                </div>
+                </div> */}
             </Modal>
             <Snackbar
                 open={notify}

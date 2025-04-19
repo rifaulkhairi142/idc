@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ClassroomController as AdminClassroomController;
 use App\Http\Controllers\Admin\ClassroomPPLController;
 use App\Http\Controllers\Admin\KepsekkPamongController;
 use App\Http\Controllers\Admin\LowonganPPLController;
+use App\Http\Controllers\Admin\ProdiController;
 use App\Http\Controllers\LowonganKPMApiController;
 use App\Http\Controllers\LowonganKPMController;
 use App\Http\Controllers\LowonganPPLApiController;
@@ -21,13 +22,17 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\SupervisorController;
 use App\Http\Controllers\Admin\SupervisorKPMController;
+use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\Mahasiswa\ClassroomPPLController as MahasiswaClassroomPPLController;
+use App\Http\Controllers\Mahasiswa\NilaiController;
+use App\Http\Controllers\SchoolCertificateController;
 use App\Http\Controllers\SupervisorKPM\ClassroomController;
 use App\Http\Controllers\SupervisorKPM\SupervisorSubmissionController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+
 
 Route::get('/lowonganppl', [LowonganPPLApiController::class, 'index']);
 Route::get('/lowongankpm', [LowonganKPMApiController::class, 'index']);
@@ -112,3 +117,21 @@ Route::post('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLControl
 Route::get('/student/classroom-ppl/task/comment', [MahasiswaClassroomPPLController::class, 'getPrivateComment']);
 Route::get('/admin/classroom-ppl/student-score', [AdminClassroomController::class, 'getStudentsScore']);
 Route::post('/admin/classroom-ppl/student-score/export', [AdminClassroomController::class, 'exportStudentsScorePPL']);
+Route::get('/admin/certificate/nilai-ppkpm', [CertificateController::class, 'getAllNilai']);
+Route::post('/admin/certificate/nilai-ppkpm/export', [CertificateController::class, 'exportRekapNilai']);
+
+Route::get('/prodi', [ProdiController::class, 'getProdi']);
+Route::post('/admin/certificate/setting', [CertificateController::class, 'saveCertificateSettings']);
+Route::get('/admin/certificate/setting', [CertificateController::class, 'getCertificateSettings']);
+Route::get('/student/nilai', [NilaiController::class, 'getNilai'])->middleware('auth:sanctum');
+Route::post('/certificate/download', [CertificateController::class, 'downloadCertificate']);
+Route::get('/certificate/download', [CertificateController::class, 'downloadCertificate']);
+
+Route::get('/certificate/teacher/download', [SchoolCertificateController::class, 'viewCertificate']);
+Route::post('/certificate/teacher/download', [SchoolCertificateController::class, 'viewCertificate']);
+
+
+
+
+
+

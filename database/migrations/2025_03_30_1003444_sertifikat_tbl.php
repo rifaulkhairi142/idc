@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('kode_idc')->nullable()->default('/IDC');
             $table->string('kode_jenis_surat')->nullable()->default('/Kp.07.6');
             $table->string('bulan_tahun')->nullable();
+            $table->boolean('open_print_certificate')->default(false);
+            $table->integer('base_number')->default(0);
 
             $table->timestamps();
         });

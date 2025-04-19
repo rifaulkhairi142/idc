@@ -145,7 +145,7 @@ class ClassroomPPLController extends Controller
                 'success' => false,
                 'message' => $e->getMessage()
 
-            ], $e->getCode());
+            ], 500);
         }
     }
 

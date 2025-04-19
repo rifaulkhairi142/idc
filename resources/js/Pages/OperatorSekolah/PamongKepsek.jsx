@@ -436,7 +436,7 @@ const PamongKepsek = ({
                                                                 </a>
                                                             </li> */}
                                                     </ul>
-                                                    <div className="py-1">
+                                                    {/* <div className="py-1">
                                                         <a
                                                             onClick={() => {
                                                                 deleteRecords(
@@ -451,7 +451,7 @@ const PamongKepsek = ({
                                                         >
                                                             Delete
                                                         </a>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             )}
                                         </td>

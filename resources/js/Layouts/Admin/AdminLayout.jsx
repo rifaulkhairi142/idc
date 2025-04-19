@@ -30,9 +30,9 @@ const AdminLayout = ({ children }) => {
                         <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
                             {children}
                         </div>
-                        <footer className="flex bg-white p-5 justify-center items-center text-sm">
+                        {/* <footer className="flex bg-white p-5 justify-center items-center text-sm">
                             Copyright © 2024 PT. EduTestMarket
-                        </footer>
+                        </footer> */}
                     </main>
                     {/* <!-- ===== Main Content End ===== --> */}
                 </div>

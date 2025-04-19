@@ -7,6 +7,7 @@ import { AiOutlineDatabase } from "react-icons/ai";
 import { LuUsers } from "react-icons/lu";
 import { Link, router } from "@inertiajs/react";
 import { SiGoogleclassroom } from "react-icons/si";
+import { BsClipboardData } from "react-icons/bs";
 
 const Sidebar = ({ tabId }) => {
     const [activeTab, setActiveTab] = useState(tabId);
@@ -285,7 +286,7 @@ const Sidebar = ({ tabId }) => {
                                     >
                                         Admin
                                     </Button>
-                                    <Button
+                                    {/* <Button
                                         className="w-full"
                                         onClick={() => {
                                             router.visit(
@@ -294,7 +295,7 @@ const Sidebar = ({ tabId }) => {
                                         }}
                                     >
                                         Supervisor
-                                    </Button>
+                                    </Button> */}
                                     <Button
                                         className="w-full"
                                         onClick={() => {
@@ -333,7 +334,7 @@ const Sidebar = ({ tabId }) => {
                                             );
                                         }}
                                     >
-                                        Supervisor KPM
+                                        Supervisor
                                     </Button>
                                 </div>
                             </div>
@@ -397,6 +398,59 @@ const Sidebar = ({ tabId }) => {
                                         }}
                                     >
                                         Nilai PPL
+                                    </Button>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <Button
+                                className={`w-full flex items-center justify-center ${
+                                    activeTab === 5 ? "active" : ""
+                                }`}
+                                onClick={() => isOpenSubmenu(6)}
+                            >
+                                <span className="icon w-[30px] h-[30px] flex items-center justify-center rounded-md">
+                                    <BsClipboardData />
+                                </span>
+                                Certificate
+                                <span
+                                    className={`arrow ml-auto w-[25px]  h-[25px] flex items-center justify-center ${
+                                        activeTab === 6 &&
+                                        isToggleSubmenu === true
+                                            ? "rotate"
+                                            : ""
+                                    }`}
+                                >
+                                    <FaAngleRight />
+                                </span>
+                            </Button>
+                            <div
+                                className={`submenuWrapper ${
+                                    activeTab === 6 && isToggleSubmenu === true
+                                        ? "colapse"
+                                        : "colapsed"
+                                }`}
+                            >
+                                <div className="submenu">
+                                    <Button
+                                        className="w-full"
+                                        onClick={() =>
+                                            router.visit(
+                                                "/admin/certificate/nilai-ppkpm"
+                                            )
+                                        }
+                                    >
+                                        Nilai PPKPM
+                                    </Button>
+                                    <Button
+                                        className="w-full"
+                                        onClick={() =>
+                                            router.visit(
+                                                "/admin/certificate/settings"
+                                            )
+                                        }
+                                    >
+                                        Certificate Settings
                                     </Button>
                                 </div>
                             </div>

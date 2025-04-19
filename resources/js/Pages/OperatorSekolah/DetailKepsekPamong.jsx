@@ -1,10 +1,62 @@
 import OperatorSekolahLayout from "@/Layouts/OperatorSekolahLayout";
 import { Head, Link } from "@inertiajs/react";
 import { NavigateNext } from "@mui/icons-material";
-import { Breadcrumbs } from "@mui/material";
+import { Breadcrumbs, Button } from "@mui/material";
+import axios from "axios";
 import React from "react";
+import { useState } from "react";
+import { ThreeDot } from "react-loading-indicators";
 
-function Dashboard({ data, base_url }) {
+function DetailKepsekPamong({ data, base_url }) {
+    const [loading, setLoading] = useState(false);
+    const [responseError, setResponseError] = useState(null);
+
+
+    const downloadCertificate = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.post(
+                "/api/certificate/teacher/download",
+                {
+                    id:data?.id,
+                },
+                {
+                    responseType: "blob",
+                }
+            );
+
+            const blob = new Blob([response.data], {
+                type: "application/pdf",
+            });
+
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = downloadUrl;
+            let filename = "";
+
+            const contentDisposition = response.headers["content-disposition"];
+    
+
+            if (contentDisposition) {
+                const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                if (match) {
+                    filename = match[1];
+                }
+            }
+
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(downloadUrl);
+        } catch (err) {
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     return (
         <OperatorSekolahLayout>
             <Head title={`${data.name || "Detail"}`} />
@@ -20,6 +72,11 @@ function Dashboard({ data, base_url }) {
                         Detail
                     </Link>
                 </Breadcrumbs>
+                {loading && (
+                    <div className="absolute z-10 w-full h-full flex items-center justify-center bg-white/70">
+                        <ThreeDot color="#4F61E3" size="medium" />
+                    </div>
+                )}
                 <div className="p-5 bg-white border ">
                     <table className="table-auto">
                         <tbody>
@@ -112,6 +169,23 @@ function Dashboard({ data, base_url }) {
                                     </a>
                                 </td>
                             </tr>
+                            <tr>
+                                <td className="pr-3 text-right align-top font-semibold">
+                                    Sertifikat
+                                </td>
+                                <td className="mr-4 text-left align-top py-2">
+                                    <Button
+                                        onClick={downloadCertificate}
+                                        size="small"
+                                        sx={{ textTransform: "capitalize" }}
+                                        variant="contained"
+                                        disableElevation
+                                        color="primary"
+                                    >
+                                        Cetak Sertifikat
+                                    </Button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -120,4 +194,4 @@ function Dashboard({ data, base_url }) {
     );
 }
 
-export default Dashboard;
+export default DetailKepsekPamong;

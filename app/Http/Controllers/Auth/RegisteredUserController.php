@@ -59,6 +59,8 @@ class RegisteredUserController extends Controller
                 Mahasiswa::create([
                     'nim' => $request->username
                 ]);
+                $token = $user->createToken('api-token')->plainTextToken;
+                session(['access_token' => $token]);
             });
 
             return redirect(route('frontpage', absolute: false));

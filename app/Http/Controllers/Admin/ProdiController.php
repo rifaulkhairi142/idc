@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Imports\ProdiImport;
 use App\Models\Prodi;
+use Exception;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ProdiController extends Controller
@@ -77,5 +78,18 @@ class ProdiController extends Controller
             return redirect('admin/daftarprodi')->with('message', ['success' => 'Prodi berhasil diupdate']);
         }
         return redirect('admin/daftarprodi')->with('message', ['success' => 'Terjadi Kesalahan']);
+    }
+
+    public function getProdi(){
+        try{
+            $data = Prodi::all();
+            return response()->json([
+                'data' => $data,
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

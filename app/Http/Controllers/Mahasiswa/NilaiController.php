@@ -4,35 +4,57 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class NilaiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $mahasiswa = Mahasiswa::where('mahasiswa_tbl.nim', '=', Auth::user()->username)
-            ->join('users', 'users.username', '=', 'mahasiswa_tbl.nim')
-            ->join('prodi_tbl', 'prodi_tbl.id', '=', 'mahasiswa_tbl.id_prodi')
-            ->join('ppl_tbl', 'ppl_tbl.id', '=', 'mahasiswa_tbl.id_lowongan_ppl')
-            ->join('sekolah_tbl', 'sekolah_tbl.id', '=', 'ppl_tbl.id_sekolah')
 
-            ->select(
-                'users.name as nama_mahasiswa',
-                'mahasiswa_tbl.id as id_mahasiswa',
-                'ppl_tbl.name as nama_lowongan',
-                'sekolah_tbl.name as nama_sekolah',
-                'prodi_tbl.name as nama_prodi',
-                'mahasiswa_tbl.nilai_pamong',
-                'mahasiswa_tbl.nilai_supervisor_ppl',
-                'mahasiswa_tbl.nim',
-                'mahasiswa_tbl.no_hp_wa',
-                'users.name as nama_supervisor'
-            )
-            ->get();
+        $token = $request->session()->get('access_token');
+
         return Inertia::render('Mahasiswa/Nilai', [
-            'mahasiswa' => $mahasiswa
+            'access_token' => $token
         ]);
+    }
+
+    public function getNilai(Request $request)
+    {
+        try {
+
+            if ($request->has('nim') && !empty($request->nim)) {
+                $data_mahasiswa = DB::table('nilai_ppkpm_view')
+                    ->where('nim', $request->nim)
+                    ->first();
+                $certificate_setting = DB::table('sertifikat_tbl')
+                        ->first();
+                if($certificate_setting === null){
+                    $certificate_setting['open_print_certificate'] = 0;
+                }
+                
+
+                if ($data_mahasiswa) {
+                    $data = array_merge((array)$data_mahasiswa, (array)$certificate_setting);
+                    return response()->json([
+                        'data' => [
+                            'message' => 'Berhasil memperoleh data mahasiswa',
+                            'mahasiswa' => $data
+                        ]
+                    ], 200);
+                } else {
+                    throw new Exception('Mahasiswa tidak ditemukan', 400);
+                }
+            } else {
+                throw new Exception('NIM mandatory', 400);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'data' => ['message' => $e->getMessage()]
+            ], $e->getCode());
+        }
     }
 }

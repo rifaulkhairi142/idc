@@ -24,7 +24,6 @@ class AdminKecamatanController extends Controller
     public function detail()
     {
         return Inertia::render('OperatorKecamatan/DetailCamatKeuchik');
-        
     }
 
     public function list()

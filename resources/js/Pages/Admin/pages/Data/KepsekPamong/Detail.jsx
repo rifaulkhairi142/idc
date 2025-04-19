@@ -177,6 +177,7 @@ const Detail = ({ data, base_url }) => {
                                             </a>
                                         </td>
                                     </tr>
+                                    
                                     <tr className="pt-3">
                                         <td className="pr-3 text-right align-top font-semibold">
                                             Status

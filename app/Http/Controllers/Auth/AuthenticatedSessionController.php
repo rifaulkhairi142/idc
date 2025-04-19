@@ -34,6 +34,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $token = $request->user()->createToken('auth_token')->plainTextToken;
+        session(['access_token' => $token]);
+
         if ($request->user()->role != 'user') {
             if ($request->user()->role === 'admin') {
                 return redirect('admin/dashboard');
@@ -57,6 +60,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // $request->user()->currentAccessToken()->delete();
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();

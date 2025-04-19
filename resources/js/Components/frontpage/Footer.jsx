@@ -86,7 +86,7 @@ const Footer = ({ currentTab }) => {
                     <BottomNavigationAction
                         color="primary"
                         label="Nilai"
-                        // onClick={() => router.visit("/nilai")}
+                        onClick={() => router.visit("/nilai")}
                         icon={<MdLibraryBooks />}
                     />
                     <BottomNavigationAction
