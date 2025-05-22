@@ -486,7 +486,7 @@ const RekapNilaiPPKPM = ({ flash, base_url }) => {
                                                     {item?.LK_KPM}
                                                 </td>
                                                 <td className="px-4 py-3">
-                                                    {item?.LK_KPM}
+                                                    {item?.SM_KPM}
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     {item?.nilai_supervisor_ppl}

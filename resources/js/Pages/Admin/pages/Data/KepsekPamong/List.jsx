@@ -521,7 +521,10 @@ const List = ({ daftarprodi, flash, message, base_url }) => {
                                                                     <a
                                                                         onClick={() => {
                                                                             router.get(
-                                                                                `/admin/data/kepsek-pamong/edit/'${item.id}`
+                                                                                `/admin/data/kepsek-pamong/edit`, {
+                                                                                    'id_sekolah': item.id_sekolah,
+                                                                                    'id':item?.id
+                                                                                }
                                                                             );
                                                                             setDropdownOpen(
                                                                                 null

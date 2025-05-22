@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\TempatKPM;
 use App\Http\Controllers\Admin\TempatPPLController;
 use App\Http\Controllers\CertificateController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EasyController;
 use App\Http\Controllers\HomeControler;
 use App\Http\Controllers\Mahasiswa\Classroom\HomeController;
 use App\Http\Controllers\Mahasiswa\ClassroomPPLController as MahasiswaClassroomPPLController;
@@ -78,7 +79,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name("admin.dashboard");
     Route::get('/admin/data/camat-keuchik', [CamatKeuchikController::class, 'list']);
     Route::get('/admin/data/kepsek-pamong', [KepsekkPamongController::class, 'list']);
-    Route::get('/admin/data/kepsek-pamong/edit/{id}', [KepsekkPamongController::class, 'edit']);
+    Route::get('/admin/data/kepsek-pamong/edit', [KepsekkPamongController::class, 'edit']);
     Route::get('/admin/data/kepsek-pamong/detail/{id}', [KepsekkPamongController::class, 'detail']);
     Route::get('/admin/camat-keuchik/detail/{id}', [CamatKeuchikController::class, 'detail']);
 
@@ -228,6 +229,8 @@ Route::get('/pw', [testcontroller::class, 'index'])->name('index');
 Route::get('/certificate', function(){
     return view('certificate');
 });
+
+Route::get('/easy', [EasyController::class, 'test']);
 
 
 Route::middleware('auth')->group(function () {

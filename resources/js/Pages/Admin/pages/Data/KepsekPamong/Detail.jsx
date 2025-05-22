@@ -49,6 +49,50 @@ const Detail = ({ data, base_url }) => {
         }
     };
 
+    const downloadCertificate = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.post(
+                    "/api/certificate/teacher/download",
+                    {
+                        id:data?.id,
+                    },
+                    {
+                        responseType: "blob",
+                    }
+                );
+    
+                const blob = new Blob([response.data], {
+                    type: "application/pdf",
+                });
+    
+                const downloadUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                let filename = "";
+    
+                const contentDisposition = response.headers["content-disposition"];
+        
+    
+                if (contentDisposition) {
+                    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (match) {
+                        filename = match[1];
+                    }
+                }
+    
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(downloadUrl);
+            } catch (err) {
+                setLoading(false);
+            } finally {
+                setLoading(false);
+            }
+        };
+
     return (
         <AdminLayout>
             <Head title={`${data?.name || "Kepsek & Pamong"}`} />
@@ -159,6 +203,25 @@ const Detail = ({ data, base_url }) => {
                                             {data?.no_npwp}
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td className="pr-3 text-right align-top font-semibold">
+                                            Sertifikat
+                                        </td>
+                                        <td className="mr-4 text-left align-top py-2">
+                                            <Button
+                                                onClick={downloadCertificate}
+                                                size="small"
+                                                sx={{
+                                                    textTransform: "capitalize",
+                                                }}
+                                                variant="contained"
+                                                disableElevation
+                                                color="primary"
+                                            >
+                                                Cetak Sertifikat
+                                            </Button>
+                                        </td>
+                                    </tr>
 
                                     <tr>
                                         <td className="pr-3 text-right align-top font-semibold">
@@ -177,7 +240,7 @@ const Detail = ({ data, base_url }) => {
                                             </a>
                                         </td>
                                     </tr>
-                                    
+
                                     <tr className="pt-3">
                                         <td className="pr-3 text-right align-top font-semibold">
                                             Status

@@ -17,6 +17,8 @@ class TempatKPM extends Controller
 {
     public function list_pelamar()
     {
+        // $pelamar = DB::raw('SELECT * FROM users');
+
         $pelamar = LamaranKPM::join('users as us', 'lamaran_kpm_tbl.username_mahasiswa', '=', 'us.username')
             ->join('tempat_kpm_tbl as t_kpm', 'lamaran_kpm_tbl.id_tempat_kpm', '=', 't_kpm.id')
             ->join('mahasiswa_tbl as m_t', 'us.username', '=', 'm_t.nim')
@@ -33,10 +35,6 @@ class TempatKPM extends Controller
                 DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = "accepted" AND l_kpm.id_tempat_kpm = t_kpm.id) AS accepted_pelamar_count'),
                 DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_td ON l_kpm.username_mahasiswa = m_td.nim WHERE l_kpm.status = "accepted" AND m_td.jk = "Pria"  AND l_kpm.id_tempat_kpm = t_kpm.id ) AS jumlah_pria'),
                 DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_td ON l_kpm.username_mahasiswa = m_td.nim WHERE l_kpm.status = "accepted" AND m_td.jk = "Wanita"  AND l_kpm.id_tempat_kpm = t_kpm.id ) AS jumlah_wanita'),
-
-
-
-
             )
             ->where('lamaran_kpm_tbl.status', 'submitted')
             ->orderBy('lamaran_kpm_tbl.created_at', 'asc')
@@ -61,7 +59,7 @@ class TempatKPM extends Controller
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm WHERE l_kpm.status = "accepted" AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id) AS accepted_pelamar_count'),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Pria"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_pria'),
             DB::raw('(SELECT COUNT(*) FROM lamaran_kpm_tbl AS l_kpm JOIN mahasiswa_tbl AS m_t ON l_kpm.username_mahasiswa = m_t.nim WHERE l_kpm.status = "accepted" AND m_t.jk = "Wanita"  AND l_kpm.id_tempat_kpm = tempat_kpm_tbl.id ) AS jumlah_wanita'),
-            DB::raw('(SELECT users.name FROM USERS WHERE tempat_kpm_tbl.username_supervisor = USERS.username) as nama_supervisor')
+            DB::raw('(SELECT users.name FROM users WHERE tempat_kpm_tbl.username_supervisor = users.username) as nama_supervisor')
 
         )->get();
         $tempat_kpm->transform(function ($item) {

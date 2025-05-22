@@ -130,6 +130,8 @@ Route::get('/certificate/download', [CertificateController::class, 'downloadCert
 Route::get('/certificate/teacher/download', [SchoolCertificateController::class, 'viewCertificate']);
 Route::post('/certificate/teacher/download', [SchoolCertificateController::class, 'viewCertificate']);
 
+Route::post('/admin/data/kepsek-pamong/edit', [KepsekkPamongController::class, 'update']);
+
 
 
 

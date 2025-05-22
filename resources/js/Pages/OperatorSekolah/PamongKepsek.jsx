@@ -179,7 +179,7 @@ const PamongKepsek = ({
                         >
                             Import
                         </Button> */}
-                    <Button
+                    {/* <Button
                         variant="contained"
                         disableElevation
                         disabled={loading}
@@ -192,10 +192,10 @@ const PamongKepsek = ({
                         }}
                     >
                         Tambah
-                    </Button>
+                    </Button> */}
                 </div>
 
-                <p>{error}</p>
+                
                 <div className="bg-white dark:bg-gray-800 p-3 relative shadow-md sm:rounded-lg overflow-hidden">
                     <Alert severity="info">
                         <AlertTitle>Petunjuk</AlertTitle>

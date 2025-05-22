@@ -55,6 +55,7 @@ class KepsekkPamongController extends Controller
                     'us.username'
                 )
                 ->get();
+                
             $data['status'] = 'error';
             $data['data'] = $data_mahasiswa;
             return response()->json($data);
@@ -74,9 +75,13 @@ class KepsekkPamongController extends Controller
         return Inertia::render('Admin/pages/Data/KepsekPamong/Detail', ['data' => $data, 'base_url' => url('/')]);
     }
 
-    public function edit ($id){
-        dd($id);
-        return Inertia::render('');
+    public function edit (Request $request){
+        $data = AmprahamPPL::find($request->id);
+       
+        return Inertia::render('Admin/pages/Data/KepsekPamong/EditKepsekPamong', [
+            'data' => $data
+        ]);
+
     }
     public function export()
     {
@@ -94,7 +99,9 @@ class KepsekkPamongController extends Controller
         if ($request->has('search_key') && !empty($request->search_key)) {
             $query->where(function ($subQuery) use ($request) {
                 $subQuery->where('ampraham_ppl_tbl.name', 'like', '%' . $request->search_key . '%')
-                    ->orWhere('s_tbl.name', 'like', '%' . $request->search_key . '%');
+                    ->orWhere('s_tbl.name', 'like', '%' . $request->search_key . '%')
+                    ->orWhere('us.name', 'like', '%' . $request->search_key . '%')
+                    ->orWhere('us.username', 'like', '%' . $request->search_key . '%');
                 // ->orWhere('booking_tbl.student_nim', 'like', '%' . $request->search_key . '%');
             });
         }
@@ -145,6 +152,45 @@ class KepsekkPamongController extends Controller
 
 
     }
+
+    public function update(Request $request){
+
+        try{
+            $data = [
+                'id' => $request->id,
+                'no_rekening' => $request->no_rekening,
+                'no_npwp' => $request->no_npwp,
+                'name' => $request->name,
+                'nip' => $request->nip,
+                'nama_bank' =>$request->nama_bank,
+                'nama_di_buku_rekening' =>$request->nama_di_buku_rekening,
+                'pangkat_dan_golongan' => $request->pangkat_dan_golongan,
+                'username_mahasiswa' => $request->username_mahasiswa,
+                'id_sekolah' => $request->id_sekolah,
+                'jabatan'=> $request->jabatan
+            ];
+    
+            $ampraham = AmprahamPPL::find($request->id);
+            if($ampraham == null){
+                throw new Exception('Data tidak ditemukan',404);
+            }
+
+            $ampraham->update($data);
+    
+            return response()->json(['success'=> true, 'message'=>'Data Berhasil disimpan']);
+
+        }catch(Exception $e){
+            return response()->json([
+                'success'=> false,
+                'message' => $e->getMessage(),
+            ], $e->getCode());
+
+        }
+        
+    }
+
+
+
 }
 
 
